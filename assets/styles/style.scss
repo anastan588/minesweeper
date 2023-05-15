@@ -158,9 +158,16 @@ body {
 }
 
 .duration_block {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 .counter_mines {
-  font-size: 150%;
+  font-size: 120%;
+}
+
+.counter_times {
+  font-size: 120%;
 }
 
 .game_block {

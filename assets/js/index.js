@@ -5,6 +5,8 @@ class MineSweeperGame {
     this.mines = mines;
     this.numberOfMinesForCounter = mines;
     this.clickscount = 0;
+    this.seconds = 0;
+    this.minutes = 0;
     this.mainContainer = document.createElement("div");
     this.titleToolsScoreContainer = document.createElement("div");
     this.durationAndGameContainer = document.createElement("div");
@@ -14,6 +16,7 @@ class MineSweeperGame {
     this.durationOnGame = document.createElement("div");
     this.game = document.createElement("div");
     this.counterOfMines = document.createElement("div");
+    this.counterOfTime = document.createElement("div");
     this.cell;
     this.cellWithOutBomb;
     this.currentCell;
@@ -27,7 +30,9 @@ class MineSweeperGame {
     this.title.textContent = "Kitten MineSweeper";
     this.tools.classList.add("tools_block");
     this.counterOfMines.classList.add("counter_mines");
-    this.counterOfMines.textContent = `Number of hidden cats: ${this.numberOfMinesForCounter}`;
+    this.counterOfMines.textContent = `Number of hidden dreaming cats: ${this.numberOfMinesForCounter}`;
+    this.counterOfTime.classList.add("counter_times");
+    this.counterOfTime.textContent = `Duration: 00:00 min`;
     this.durationAndGameContainer.classList.add("container_game");
     this.durationOnGame.classList.add("duration_block");
     this.game.classList.add("game_block");
@@ -39,6 +44,7 @@ class MineSweeperGame {
     this.titleToolsScoreContainer.append(this.tools);
     this.mainContainer.append(this.durationAndGameContainer);
     this.durationAndGameContainer.append(this.durationOnGame);
+     this.durationOnGame.append(this.counterOfTime);
     this.durationOnGame.append(this.counterOfMines);
     this.durationAndGameContainer.append(this.game);
   }
@@ -225,7 +231,7 @@ class MineSweeperGame {
         this.currentCell.dataset.position.split(",")[1]
       );
       if (event.type === "click") {
-        if (!this.currentCell.classList.contains("opened")) {
+        if (!this.currentCell.classList.contains("opened") && !this.currentCell.classList.contains("marked")) {
           this.currentCell.classList.add("opened");
           if (
             this.minesField[cellCurrentRowPosition][
@@ -297,10 +303,10 @@ class MineSweeperGame {
       this.numberOfMinesForCounter = this.numberOfMinesForCounter - 1;
       console.log(this.numberOfMinesForCounter);
       console.log(this.mines);
-      this.counterOfMines.textContent = `Number of hidden cats: ${this.numberOfMinesForCounter}`;
+      this.counterOfMines.textContent = `Number of hidden dreaming cats: ${this.numberOfMinesForCounter}`;
     } else if (!this.currentCell.classList.contains("marked")) {
       this.numberOfMinesForCounter = this.numberOfMinesForCounter + 1;
-      this.counterOfMines.textContent = `Number of hidden cats: ${this.numberOfMinesForCounter}`;
+      this.counterOfMines.textContent = `Number of hidden dreaming cats: ${this.numberOfMinesForCounter}`;
     }
   }
 
@@ -764,6 +770,25 @@ class MineSweeperGame {
       }
     }
   }
+
+  countTime() {
+    if (this.seconds > 60) {
+      this.minutes = this.minutes + 1;
+      this.seconds = 0;
+    }
+    this.seconds = this.seconds + 1;
+    console.log(this.counterOfTime);
+    if (this.seconds< 10) {
+this.counterOfTime.textContent = `Duration: 0${this.minutes}:0${this.seconds} min`;
+    } else if (this.seconds>= 10) {
+      this.counterOfTime.textContent = `Duration: 0${this.minutes}:${this.seconds} min`;
+    } else if (this.minutes>=10 && this.seconds< 10 ) {
+      this.counterOfTime.textContent = `Duration: ${this.minutes}:0${this.seconds} min`;
+    } else if (this.minutes>=10 && this.seconds>= 10 ) {
+      this.counterOfTime.textContent = `Duration: ${this.minutes}:${this.seconds} min`;
+    }
+    
+  }
 }
 
 let gameMiner = new MineSweeperGame();
@@ -774,6 +799,9 @@ gameMiner.game.addEventListener("click", (event) => {
   gameMiner.receiveNumberOfClicks();
   // console.log(gameMiner.clickscount);
   if (gameMiner.clickscount === 1) {
+    setInterval(function () {
+      gameMiner.countTime();
+    }, 1000);
     gameMiner.receiveMinesField(event);
   }
   gameMiner.openCell(event);
