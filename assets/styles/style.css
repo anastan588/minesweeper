@@ -108,6 +108,7 @@ body {
   display: flex;
   background-position: cover;
   background-size: 100% 100%;
+  position: relative;
 }
 
 .container {
@@ -120,42 +121,91 @@ body {
   padding: 40px 0px;
 }
 
-.title_block {
-  font-size: 300%;
-  text-align: center;
-}
-
 .container_game {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.duration_block {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
+.container_tools {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.title_block {
+  font-size: 200%;
+}
+
+.tools_block {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tools_title {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.size_block {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.size_form {
+  display: flex;
+  gap: 10px;
+}
+
+.number_mines_block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.start_button {
+  max-width: 200px;
+  text-align: center;
+  border: 4px outset;
+  padding: 15px 20px;
+  cursor: pointer;
+  background: #fafafa;
+}
+
+.duration_block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.number_clicks {
+  font-size: 100%;
+}
+
 .counter_mines {
-  font-size: 120%;
+  font-size: 100%;
 }
 
 .counter_times {
-  font-size: 120%;
+  font-size: 100%;
 }
 
 .game_block {
   display: grid;
+  justify-content: start;
 }
 
 .cell {
-  height: 40px;
-  width: 40px;
+  box-sizing: border-box;
+  height: 20px;
+  width: 20px;
   background: #fafafa;
-  border: 4px outset;
+  border: 2px outset;
   cursor: pointer;
-  font-size: 200%;
+  font-size: 120%;
   font-weight: bold;
   display: flex;
   flex-direction: column;
@@ -175,7 +225,7 @@ body {
 }
 
 .opened {
-  border: 2px solid #5f5f5f;
+  border: 1px solid #5f5f5f;
   background: #c8c8c8;
   color: red;
 }
@@ -210,4 +260,35 @@ body {
 
 .eight {
   color: #599905;
+}
+
+.window_result {
+  position: fixed;
+  max-width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  font-size: 110%;
+  border: 4px outset;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  background-color: #fafafa;
+}
+
+.result_text {
+  text-align: center;
+  font-size: 120%;
+  line-height: 110%;
+}
+
+.button_ok {
+  max-width: 60px;
+  padding: 10px 15px;
+  border: 1px solid #5f5f5f;
+  cursor: pointer;
 }/*# sourceMappingURL=style.css.map */
