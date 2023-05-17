@@ -17,6 +17,10 @@ class MineSweeperGame {
     this.minesField = new Array(this.rows);
     this.counterOfMarkedKittens = 0;
     this.counterForRestCellsWithOutBombs = 0;
+    this.audioForOpenCell = new Audio('./assets/audio/opensound.mp3');
+    this.audioForFlagCell = new Audio('./assets/audio/flagsound.mp3');
+    this.audioForMineCell = new Audio('./assets/audio/kitten2sound.mp3');
+    console.log(this.audioForOpenCell);
     this.mainContainer = document.createElement("div");
     this.toolsScoreContainer = document.createElement("div");
     this.durationAndGameContainer = document.createElement("div");
@@ -54,6 +58,13 @@ class MineSweeperGame {
     this.whiteThemeInput = document.createElement("input");
     this.blackThemeTitle = document.createElement("label");
     this.blackThemeInput = document.createElement("input");
+    this.sound = document.createElement("div");
+    this.soundTitle = document.createElement("div");
+    this.soundForm = document.createElement("form");
+    this.onSoundTitle = document.createElement("label");
+    this.onSoundInput = document.createElement("input");
+    this.offSoundTitle = document.createElement("label");
+    this.offSoundInput = document.createElement("input");
     // results block
     this.resultsBlock = document.createElement("div");
     this.resultsTitle = document.createElement("div");
@@ -69,6 +80,7 @@ class MineSweeperGame {
     this.resultsInputBlockTitle = document.createElement("div");
     this.resultsInputBlockInput = document.createElement("input");
     this.resultsInputBlockSubmit = document.createElement("div");
+
   }
 
   receiveMineSweeperGame() {
@@ -118,6 +130,8 @@ class MineSweeperGame {
     this.tools.append(this.settigsTitle);
     this.theme.classList.add("theme_block");
     this.tools.append(this.theme);
+    this.sound.classList.add("sound_block");
+    this.tools.append(this.sound);
     this.themeTitle.classList.add("theme_title");
     this.themeTitle.textContent = "Theme of game:";
     this.theme.append(this.themeTitle);
@@ -138,6 +152,26 @@ class MineSweeperGame {
     this.whiteThemeInput.setAttribute("name", "theme");
     this.themeForm.append(this.whiteThemeInput);
     this.themeForm.append(this.whiteThemeTitle);
+ this.soundTitle.classList.add("sound_title");
+    this.soundTitle.textContent = "Sound:";
+    this.sound.append(this.soundTitle);
+    this.soundForm.classList.add("sound_form");
+    this.sound.append(this.soundForm);
+    this.onSoundTitle.textContent = "on";
+    this.onSoundTitle.setAttribute("for", "on");
+    this.onSoundInput.setAttribute("id", "on");
+    this.onSoundInput.setAttribute("type", "radio");
+    this.onSoundInput.setAttribute("name", "sound");
+    this.onSoundInput.checked = true;
+    this.soundForm.append(this.onSoundInput);
+    this.soundForm.append(this.onSoundTitle);
+    this.offSoundTitle.textContent = "off";
+    this.offSoundTitle.setAttribute("for", "off");
+    this.offSoundInput.setAttribute("id", "off");
+    this.offSoundInput.setAttribute("type", "radio");
+    this.offSoundInput.setAttribute("name", "sound");
+    this.soundForm.append(this.offSoundInput);
+    this.soundForm.append(this.offSoundTitle);
     this.tools.append(this.sizeOfGame);
     this.sizeOfGame.append(this.sizeOfGameTitle);
     this.sizeForm.classList.add("size_form");
@@ -443,6 +477,7 @@ class MineSweeperGame {
                 cellCurrentColumnPosition
               ] === "m"
             ) {
+              this.audioForMineCell.play();
               let image = document.createElement("img");
               image.classList.add("mine");
               if (this.whiteThemeInput.checked) {
@@ -465,6 +500,7 @@ class MineSweeperGame {
                 cellCurrentColumnPosition
               ] !== 0
             ) {
+              this.audioForOpenCell.play();
               this.currentCell.textContent =
                 this.minesField[cellCurrentRowPosition][
                   cellCurrentColumnPosition
@@ -484,6 +520,7 @@ class MineSweeperGame {
               ] === 0
             ) {
               // console.log(this);
+              this.audioForOpenCell.play();
               this.openCellsAroundEmptyCell(
                 cellCurrentRowPosition,
                 cellCurrentColumnPosition
@@ -502,7 +539,8 @@ class MineSweeperGame {
             !this.currentCell.classList.contains("marked") &&
             !this.currentCell.classList.contains("opened")
           ) {
-            console.log("hello");
+            this.audioForFlagCell.play();
+            // console.log("hello");
             this.currentCell.classList.toggle("marked");
             let image = document.createElement("img");
             image.classList.add("flag");
@@ -521,7 +559,8 @@ class MineSweeperGame {
               );
             }
           } else if (this.currentCell.classList.contains("marked")) {
-            console.log("very bad");
+            this.audioForFlagCell.play();
+            // console.log("very bad");
             this.currentCell.classList.toggle("marked");
             this.currentCell.children[0].remove();
             this.countOfRestMines();
@@ -1283,6 +1322,18 @@ class MineSweeperGame {
     this.resultsTable.style.background = "#000000";
     this.resultsTable.style.color = "#FFFFFF";
   }
+  
+  setSoundVolumeOn(event) {
+    this.audioForMineCell.volume = 1;
+    this.audioForFlagCell.volume = 1;
+    this.audioForOpenCell.volume = 1;
+  }
+  setSoundVolumeOff(event) {
+    this.audioForMineCell.volume = 0;
+    this.audioForFlagCell.volume = 0;
+    this.audioForOpenCell.volume = 0;
+    console.log(this.audioForOpenCell.volume);
+  }
 }
 
 let gameMiner = new MineSweeperGame();
@@ -1332,4 +1383,11 @@ gameMiner.whiteThemeInput.addEventListener("change", (event) => {
 });
 gameMiner.blackThemeInput.addEventListener("change", (event) => {
   gameMiner.setBlackTheme(event);
+});
+
+gameMiner.onSoundInput.addEventListener("change", (event) => {
+  gameMiner.setSoundVolumeOn(event);
+});
+gameMiner.offSoundInput.addEventListener("change", (event) => {
+  gameMiner.setSoundVolumeOff(event);
 });

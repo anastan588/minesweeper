@@ -237,7 +237,18 @@ input[type="range"]::-webkit-slider-thumb {
   display: flex;
   gap: 10px;
 }
-
+.sound_block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.sound_title {
+  font-style: italic;
+}
+.sound_form {
+  display: flex;
+  gap: 10px;
+}
 .start_button {
   max-width: 200px;
   text-align: center;
