@@ -12,6 +12,8 @@ class MineSweeperGame {
     this.cell;
     this.cellWithOutBomb;
     this.currentCell;
+    this.markForRangeEvent = 0;
+    this.winGame = 0;
     this.minesField = new Array(this.rows);
     this.counterOfMarkedKittens = 0;
     this.counterForRestCellsWithOutBombs = 0;
@@ -43,8 +45,30 @@ class MineSweeperGame {
     this.sizeHardTitle = document.createElement("label");
     this.sizeHard = document.createElement("input");
     this.numberOfMines = document.createElement("div");
-    this.numberOfMinesTitle = document.createElement('div');
-    this.numberOfMinesInput = document.createElement('input');
+    this.numberOfMinesTitle = document.createElement("div");
+    this.numberOfMinesInput = document.createElement("input");
+    this.theme = document.createElement("div");
+    this.themeTitle = document.createElement("div");
+    this.themeForm = document.createElement("form");
+    this.whiteThemeTitle = document.createElement("label");
+    this.whiteThemeInput = document.createElement("input");
+    this.blackThemeTitle = document.createElement("label");
+    this.blackThemeInput = document.createElement("input");
+    // results block
+    this.resultsBlock = document.createElement("div");
+    this.resultsTitle = document.createElement("div");
+    this.resultsTable = document.createElement("div");
+    this.resultsTableLine = document.createElement("div");
+    this.resultsItemName = document.createElement("div");
+    this.resultsItemClicks = document.createElement("div");
+    this.resultsItemDuration = document.createElement("div");
+    // results name
+    this.resultsName;
+    // results Input
+    this.resultsInputBlock = document.createElement("div");
+    this.resultsInputBlockTitle = document.createElement("div");
+    this.resultsInputBlockInput = document.createElement("input");
+    this.resultsInputBlockSubmit = document.createElement("div");
   }
 
   receiveMineSweeperGame() {
@@ -74,17 +98,46 @@ class MineSweeperGame {
     this.durationOnGame.append(this.numberOfLeftClicks);
     this.durationOnGame.append(this.counterOfMines);
     this.durationAndGameContainer.append(this.game);
-    this.receiveSettingsBlock();
     this.receiveStartGameButton();
+    this.receiveSettingsBlock();
+    this.receiveResultsBlock();
+  }
+
+  receiveStartGameButton() {
+    this.buttonStartNewGame.classList.add("start_button");
+    this.buttonStartNewGame.textContent = "Start new game";
+    this.toolsScoreContainer.append(this.buttonStartNewGame);
   }
 
   receiveSettingsBlock() {
     this.settigsTitle.classList.add("tools_title");
-    this.settigsTitle.textContent = "Settings";
+    this.settigsTitle.textContent = "Settings:";
     this.sizeOfGame.classList.add("size_block");
     this.sizeOfGameTitle.classList.add("size_title");
     this.sizeOfGameTitle.textContent = `Size of game:`;
     this.tools.append(this.settigsTitle);
+    this.theme.classList.add("theme_block");
+    this.tools.append(this.theme);
+    this.themeTitle.classList.add("theme_title");
+    this.themeTitle.textContent = "Theme of game:";
+    this.theme.append(this.themeTitle);
+    this.themeForm.classList.add("theme_form");
+    this.theme.append(this.themeForm);
+    this.blackThemeTitle.textContent = "dark style";
+    this.blackThemeTitle.setAttribute("for", "black");
+    this.blackThemeInput.setAttribute("id", "black");
+    this.blackThemeInput.setAttribute("type", "radio");
+    this.blackThemeInput.setAttribute("name", "theme");
+    this.blackThemeInput.checked = true;
+    this.themeForm.append(this.blackThemeInput);
+    this.themeForm.append(this.blackThemeTitle);
+    this.whiteThemeTitle.textContent = "light style";
+    this.whiteThemeTitle.setAttribute("for", "white");
+    this.whiteThemeInput.setAttribute("id", "white");
+    this.whiteThemeInput.setAttribute("type", "radio");
+    this.whiteThemeInput.setAttribute("name", "theme");
+    this.themeForm.append(this.whiteThemeInput);
+    this.themeForm.append(this.whiteThemeTitle);
     this.tools.append(this.sizeOfGame);
     this.sizeOfGame.append(this.sizeOfGameTitle);
     this.sizeForm.classList.add("size_form");
@@ -113,22 +166,60 @@ class MineSweeperGame {
     this.sizeForm.append(this.sizeHardTitle);
     this.numberOfMines.classList.add("number_mines_block");
     this.tools.append(this.numberOfMines);
-    this.numberOfMinesTitle.classList.add('number_mines_title');
+    this.numberOfMinesTitle.classList.add("number_mines_title");
     this.numberOfMinesTitle.textContent = `Number of kittens: ${this.mines} kittens`;
     this.numberOfMines.append(this.numberOfMinesTitle);
-    this.numberOfMinesInput.setAttribute('id', 'numberOfMines');
-    this.numberOfMinesInput.setAttribute('type', 'range');
-    this.numberOfMinesInput.setAttribute('value', this.mines);
-    this.numberOfMinesInput.setAttribute('min', 10);
-    this.numberOfMinesInput.setAttribute('max', 99);
-    this.numberOfMinesInput.setAttribute('step', 1);
+    this.numberOfMinesInput.setAttribute("id", "numberOfMines");
+    this.numberOfMinesInput.setAttribute("type", "range");
+    this.numberOfMinesInput.setAttribute("value", this.mines);
+    this.numberOfMinesInput.setAttribute("min", 10);
+    this.numberOfMinesInput.setAttribute("max", 99);
+    this.numberOfMinesInput.setAttribute("step", 1);
     this.numberOfMines.append(this.numberOfMinesInput);
   }
 
-  receiveStartGameButton() {
-    this.buttonStartNewGame.classList.add("start_button");
-    this.buttonStartNewGame.textContent = "Start new game";
-    this.toolsScoreContainer.append(this.buttonStartNewGame);
+  receiveResultsBlock() {
+    this.resultsBlock.classList.add("results_block");
+    this.durationAndGameContainer.append(this.resultsBlock);
+    this.resultsTitle.classList.add("results_title");
+    this.resultsTitle.textContent = "Results:";
+    this.resultsBlock.append(this.resultsTitle);
+    this.resultsTable.classList.add("results_table");
+    this.resultsBlock.append(this.resultsTable);
+    this.resultsTableLine.classList.add("results_line");
+    this.resultsTable.append(this.resultsTableLine);
+    this.resultsItemName.classList.add("results_item");
+    this.resultsItemName.textContent = "Name";
+    this.resultsTableLine.append(this.resultsItemName);
+    this.resultsItemClicks.classList.add("results_item");
+    this.resultsItemClicks.textContent = "Clicks";
+    this.resultsTableLine.append(this.resultsItemClicks);
+    this.resultsItemDuration.classList.add("results_item");
+    this.resultsItemDuration.textContent = "Duration";
+    this.resultsTableLine.append(this.resultsItemDuration);
+  }
+
+  makeNoteInResults() {
+    if (this.resultsTable.children.length >= 10) {
+      this.resultsTable.children[1].remove();
+    }
+    let resultsTableLine = document.createElement("div");
+    resultsTableLine.classList.add("results_line");
+    this.resultsTable.append(resultsTableLine);
+    let resultsItemName = document.createElement("div");
+    resultsItemName.classList.add("results_item");
+    resultsItemName.textContent = this.resultsName;
+    resultsTableLine.append(resultsItemName);
+    let resultsItemClicks = document.createElement("div");
+    resultsItemClicks.classList.add("results_item");
+    resultsItemClicks.textContent = this.clickscount;
+    resultsTableLine.append(resultsItemClicks);
+    let resultsItemDuration = document.createElement("div");
+    resultsItemDuration.classList.add("results_item");
+    resultsItemDuration.textContent = `${this.counterOfTime.textContent.slice(
+      10
+    )}`;
+    resultsTableLine.append(resultsItemDuration);
   }
 
   receiveMineSweeperBoard() {
@@ -137,23 +228,29 @@ class MineSweeperGame {
         this.cell = document.createElement("div");
         this.cell.dataset.position = `${i},${j}`;
         this.cell.classList.add("cell");
+        if (this.whiteThemeInput.checked) {
+          this.cell.style.background = "#fafafa";
+        }
         this.game.append(this.cell);
       }
     }
   }
 
   receiveNumberOfClicks(event) {
-    if (document.body.children[0].classList.contains("window_result")) {
+    if (
+      document.body.children[0].classList.contains("window_result") ||
+      this.markForRangeEvent !== 0
+    ) {
       event.stopImmediatePropagation();
       return;
     }
     this.clickscount += 1;
     this.numberOfLeftClicks.textContent = `Number of movements: ${this.clickscount}`;
     if (this.clickscount === 1) {
-      setTimeout(function() {
+      setTimeout(function () {
         gameMiner.countTime();
       }, 0);
-      this.timerIdForStop = setInterval(function() {
+      this.timerIdForStop = setInterval(function () {
         gameMiner.countTime();
       }, 1000);
     }
@@ -295,133 +392,146 @@ class MineSweeperGame {
       let currentCellColumn = parseInt(
         this.game.children[i].dataset.position.split(",")[1]
       );
-      this.game.children[i].textContent = this.minesField[currentCellRow][
-        currentCellColumn
-      ];
+      this.game.children[i].textContent =
+        this.minesField[currentCellRow][currentCellColumn];
     }
   }
 
   openCell(event) {
     // console.log(event);
     // console.log(event.target);
-    if (document.body.children[0].classList.contains("window_result")) {
+    // console.log(this.markForRangeEvent);
+    if (
+      document.body.children[0].classList.contains("window_result") ||
+      this.markForRangeEvent !== 0
+    ) {
       event.preventDefault();
       event.stopImmediatePropagation();
       return;
-    }
-    if (event.target.tagName == "IMG ") {
-      event.preventDefault();
-    }
-    if (
-      (!this.cell && event.type === "click") ||
-      (!this.cell && event.type === "contextmenu")
-    ) {
-      console.log("ds[j;e");
-      event.preventDefault();
-      return;
     } else {
-      if (event.target.tagName == "DIV") {
-        this.currentCell = event.target;
-      } else {
-        this.currentCell = event.target.parentNode;
-        console.log(this.currentCell);
-      }
-      let cellCurrentRowPosition = parseInt(
-        this.currentCell.dataset.position.split(",")[0]
-      );
-      let cellCurrentColumnPosition = parseInt(
-        this.currentCell.dataset.position.split(",")[1]
-      );
-      if (event.type === "click") {
-        if (
-          !this.currentCell.classList.contains("opened") &&
-          !this.currentCell.classList.contains("marked")
-        ) {
-          this.currentCell.classList.add("opened");
-          if (
-            this.minesField[cellCurrentRowPosition][
-              cellCurrentColumnPosition
-            ] === "m"
-          ) {
-            let image = document.createElement("img");
-            image.classList.add("mine");
-            image.src = "./assets/icons/whitecat.png";
-            this.currentCell.append(image);
-            this.makeResultMessage(
-              cellCurrentRowPosition,
-              cellCurrentColumnPosition
-            );
-            this.openResultWindow();
-          }
-          if (
-            this.minesField[cellCurrentRowPosition][
-              cellCurrentColumnPosition
-            ] !== "m" &&
-            this.minesField[cellCurrentRowPosition][
-              cellCurrentColumnPosition
-            ] !== 0
-          ) {
-            this.currentCell.textContent = this.minesField[
-              cellCurrentRowPosition
-            ][cellCurrentColumnPosition];
-            this.makeDigitsColorful(
-              cellCurrentRowPosition,
-              cellCurrentColumnPosition
-            );
-            this.makeValidationForWinningForRestUnOpenedSells(
-              cellCurrentRowPosition,
-              cellCurrentColumnPosition
-            );
-          }
-          if (
-            this.minesField[cellCurrentRowPosition][
-              cellCurrentColumnPosition
-            ] === 0
-          ) {
-            // console.log(this);
-            this.openCellsAroundEmptyCell(
-              cellCurrentRowPosition,
-              cellCurrentColumnPosition
-            );
-            this.makeValidationForWinningForRestUnOpenedSells(
-              cellCurrentRowPosition,
-              cellCurrentColumnPosition
-            );
-          } else {
-            return;
-          }
-        }
-      } else if (event.type === "contextmenu") {
+      if (event.target.tagName == "IMG ") {
         event.preventDefault();
-        if (
-          !this.currentCell.classList.contains("marked") &&
-          !this.currentCell.classList.contains("opened")
-        ) {
-          console.log("hello");
-          this.currentCell.classList.toggle("marked");
-          let image = document.createElement("img");
-          image.classList.add("flag");
-          image.src = "./assets/icons/whitepaw.png";
-          this.currentCell.append(image);
-          this.countOfRestMines();
-          if (this.numberOfMinesForCounter === 0) {
-            // console.log(this.numberOfMinesForCounter);
-            this.makeValidationForWinningForMarkedSells(
-              cellCurrentRowPosition,
-              cellCurrentColumnPosition
-            );
+      }
+      if (
+        (!this.cell && event.type === "click") ||
+        (!this.cell && event.type === "contextmenu")
+      ) {
+        event.preventDefault();
+        return;
+      } else {
+        if (event.target.tagName == "DIV") {
+          this.currentCell = event.target;
+        } else {
+          this.currentCell = event.target.parentNode;
+          console.log(this.currentCell);
+        }
+        let cellCurrentRowPosition = parseInt(
+          this.currentCell.dataset.position.split(",")[0]
+        );
+        let cellCurrentColumnPosition = parseInt(
+          this.currentCell.dataset.position.split(",")[1]
+        );
+        if (event.type === "click") {
+          if (
+            !this.currentCell.classList.contains("opened") &&
+            !this.currentCell.classList.contains("marked")
+          ) {
+            this.currentCell.classList.add("opened");
+            this.currentCell.style.background = "#c8c8c8";
+            if (
+              this.minesField[cellCurrentRowPosition][
+                cellCurrentColumnPosition
+              ] === "m"
+            ) {
+              let image = document.createElement("img");
+              image.classList.add("mine");
+              if (this.whiteThemeInput.checked) {
+                image.src = "./assets/icons/blindkitten.png";
+              } else if (this.blackThemeInput.checked) {
+                image.src = "./assets/icons/blackkitten.png";
+              }
+              this.currentCell.append(image);
+              this.makeResultMessage(
+                cellCurrentRowPosition,
+                cellCurrentColumnPosition
+              );
+              this.openResultWindow();
+            }
+            if (
+              this.minesField[cellCurrentRowPosition][
+                cellCurrentColumnPosition
+              ] !== "m" &&
+              this.minesField[cellCurrentRowPosition][
+                cellCurrentColumnPosition
+              ] !== 0
+            ) {
+              this.currentCell.textContent =
+                this.minesField[cellCurrentRowPosition][
+                  cellCurrentColumnPosition
+                ];
+              this.makeDigitsColorful(
+                cellCurrentRowPosition,
+                cellCurrentColumnPosition
+              );
+              this.makeValidationForWinningForRestUnOpenedSells(
+                cellCurrentRowPosition,
+                cellCurrentColumnPosition
+              );
+            }
+            if (
+              this.minesField[cellCurrentRowPosition][
+                cellCurrentColumnPosition
+              ] === 0
+            ) {
+              // console.log(this);
+              this.openCellsAroundEmptyCell(
+                cellCurrentRowPosition,
+                cellCurrentColumnPosition
+              );
+              this.makeValidationForWinningForRestUnOpenedSells(
+                cellCurrentRowPosition,
+                cellCurrentColumnPosition
+              );
+            } else {
+              return;
+            }
           }
-        } else if (this.currentCell.classList.contains("marked")) {
-          console.log("very bad");
-          this.currentCell.classList.toggle("marked");
-          this.currentCell.children[0].remove();
-          this.countOfRestMines();
-          if (this.numberOfMinesForCounter === 0) {
-            // console.log(this.numberOfMinesForCounter);
-            this.makeValidationForWinningForMarkedSells(
-              cellCurrentRowPosition,
-              cellCurrentColumnPosition
-            );
+        } else if (event.type === "contextmenu") {
+          event.preventDefault();
+          if (
+            !this.currentCell.classList.contains("marked") &&
+            !this.currentCell.classList.contains("opened")
+          ) {
+            console.log("hello");
+            this.currentCell.classList.toggle("marked");
+            let image = document.createElement("img");
+            image.classList.add("flag");
+            if (this.blackThemeInput.checked) {
+              image.src = "./assets/icons/blindpaw.png";
+            } else if (this.whiteThemeInput.checked) {
+              image.src = "./assets/icons/blackpaw.png";
+            }
+            this.currentCell.append(image);
+            this.countOfRestMines();
+            if (this.numberOfMinesForCounter === 0) {
+              // console.log(this.numberOfMinesForCounter);
+              this.makeValidationForWinningForMarkedSells(
+                cellCurrentRowPosition,
+                cellCurrentColumnPosition
+              );
+            }
+          } else if (this.currentCell.classList.contains("marked")) {
+            console.log("very bad");
+            this.currentCell.classList.toggle("marked");
+            this.currentCell.children[0].remove();
+            this.countOfRestMines();
+            if (this.numberOfMinesForCounter === 0) {
+              // console.log(this.numberOfMinesForCounter);
+              this.makeValidationForWinningForMarkedSells(
+                cellCurrentRowPosition,
+                cellCurrentColumnPosition
+              );
+            }
           }
         }
       }
@@ -429,11 +539,11 @@ class MineSweeperGame {
   }
 
   countOfRestMines() {
-    console.log(this.currentCell);
+    // console.log(this.currentCell);
     if (this.currentCell.classList.contains("marked")) {
       this.numberOfMinesForCounter = this.numberOfMinesForCounter - 1;
-      console.log(this.numberOfMinesForCounter);
-      console.log(this.mines);
+      // console.log(this.numberOfMinesForCounter);
+      // console.log(this.mines);
       this.counterOfMines.textContent = `Number of hidden dreaming cats: ${this.numberOfMinesForCounter}`;
     } else if (!this.currentCell.classList.contains("marked")) {
       this.numberOfMinesForCounter = this.numberOfMinesForCounter + 1;
@@ -479,14 +589,16 @@ class MineSweeperGame {
       for (let i = 0; i < this.game.children.length; i++) {
         if (currentDataSet === this.game.children[i].dataset.position) {
           this.game.children[i].classList.add("opened");
+          this.game.children[i].style.background = "#c8c8c8";
           if (
             this.minesField[cellCurrentRowPosition - 1][
               cellCurrentColumnPosition - 1
             ] !== 0
           ) {
-            this.game.children[i].innerHTML = this.minesField[
-              cellCurrentRowPosition - 1
-            ][cellCurrentColumnPosition - 1];
+            this.game.children[i].innerHTML =
+              this.minesField[cellCurrentRowPosition - 1][
+                cellCurrentColumnPosition - 1
+              ];
           }
           currentCellOnCheck = this.game.children[i];
           this.makeDigitsColorful(
@@ -527,14 +639,16 @@ class MineSweeperGame {
       for (let i = 0; i < this.game.children.length; i++) {
         if (currentDataSet === this.game.children[i].dataset.position) {
           this.game.children[i].classList.add("opened");
+          this.game.children[i].style.background = "#c8c8c8";
           if (
             this.minesField[cellCurrentRowPosition - 1][
               cellCurrentColumnPosition
             ] !== 0
           ) {
-            this.game.children[i].innerHTML = this.minesField[
-              cellCurrentRowPosition - 1
-            ][cellCurrentColumnPosition];
+            this.game.children[i].innerHTML =
+              this.minesField[cellCurrentRowPosition - 1][
+                cellCurrentColumnPosition
+              ];
           }
           currentCellOnCheck = this.game.children[i];
           this.makeDigitsColorful(
@@ -577,14 +691,16 @@ class MineSweeperGame {
       for (let i = 0; i < this.game.children.length; i++) {
         if (currentDataSet === this.game.children[i].dataset.position) {
           this.game.children[i].classList.add("opened");
+          this.game.children[i].style.background = "#c8c8c8";
           if (
             this.minesField[cellCurrentRowPosition - 1][
               cellCurrentColumnPosition + 1
             ] !== 0
           ) {
-            this.game.children[i].innerHTML = this.minesField[
-              cellCurrentRowPosition - 1
-            ][cellCurrentColumnPosition + 1];
+            this.game.children[i].innerHTML =
+              this.minesField[cellCurrentRowPosition - 1][
+                cellCurrentColumnPosition + 1
+              ];
           }
 
           currentCellOnCheck = this.game.children[i];
@@ -620,14 +736,16 @@ class MineSweeperGame {
       for (let i = 0; i < this.game.children.length; i++) {
         if (currentDataSet === this.game.children[i].dataset.position) {
           this.game.children[i].classList.add("opened");
+          this.game.children[i].style.background = "#c8c8c8";
           if (
             this.minesField[cellCurrentRowPosition][
               cellCurrentColumnPosition - 1
             ] !== 0
           ) {
-            this.game.children[i].innerHTML = this.minesField[
-              cellCurrentRowPosition
-            ][cellCurrentColumnPosition - 1];
+            this.game.children[i].innerHTML =
+              this.minesField[cellCurrentRowPosition][
+                cellCurrentColumnPosition - 1
+              ];
           }
 
           currentCellOnCheck = this.game.children[i];
@@ -664,14 +782,16 @@ class MineSweeperGame {
       for (let i = 0; i < this.game.children.length; i++) {
         if (currentDataSet === this.game.children[i].dataset.position) {
           this.game.children[i].classList.add("opened");
+          this.game.children[i].style.background = "#c8c8c8";
           if (
             this.minesField[cellCurrentRowPosition][
               cellCurrentColumnPosition + 1
             ] !== 0
           ) {
-            this.game.children[i].innerHTML = this.minesField[
-              cellCurrentRowPosition
-            ][cellCurrentColumnPosition + 1];
+            this.game.children[i].innerHTML =
+              this.minesField[cellCurrentRowPosition][
+                cellCurrentColumnPosition + 1
+              ];
           }
 
           currentCellOnCheck = this.game.children[i];
@@ -709,14 +829,16 @@ class MineSweeperGame {
       for (let i = 0; i < this.game.children.length; i++) {
         if (currentDataSet === this.game.children[i].dataset.position) {
           this.game.children[i].classList.add("opened");
+          this.game.children[i].style.background = "#c8c8c8";
           if (
             this.minesField[cellCurrentRowPosition + 1][
               cellCurrentColumnPosition - 1
             ] !== 0
           ) {
-            this.game.children[i].innerHTML = this.minesField[
-              cellCurrentRowPosition + 1
-            ][cellCurrentColumnPosition - 1];
+            this.game.children[i].innerHTML =
+              this.minesField[cellCurrentRowPosition + 1][
+                cellCurrentColumnPosition - 1
+              ];
           }
 
           currentCellOnCheck = this.game.children[i];
@@ -752,14 +874,16 @@ class MineSweeperGame {
       for (let i = 0; i < this.game.children.length; i++) {
         if (currentDataSet === this.game.children[i].dataset.position) {
           this.game.children[i].classList.add("opened");
+          this.game.children[i].style.background = "#c8c8c8";
           if (
             this.minesField[cellCurrentRowPosition + 1][
               cellCurrentColumnPosition
             ] !== 0
           ) {
-            this.game.children[i].innerHTML = this.minesField[
-              cellCurrentRowPosition + 1
-            ][cellCurrentColumnPosition];
+            this.game.children[i].innerHTML =
+              this.minesField[cellCurrentRowPosition + 1][
+                cellCurrentColumnPosition
+              ];
           }
 
           currentCellOnCheck = this.game.children[i];
@@ -798,14 +922,16 @@ class MineSweeperGame {
       for (let i = 0; i < this.game.children.length; i++) {
         if (currentDataSet === this.game.children[i].dataset.position) {
           this.game.children[i].classList.add("opened");
+          this.game.children[i].style.background = "#c8c8c8";
           if (
             this.minesField[cellCurrentRowPosition + 1][
               cellCurrentColumnPosition + 1
             ] !== 0
           ) {
-            this.game.children[i].innerHTML = this.minesField[
-              cellCurrentRowPosition + 1
-            ][cellCurrentColumnPosition + 1];
+            this.game.children[i].innerHTML =
+              this.minesField[cellCurrentRowPosition + 1][
+                cellCurrentColumnPosition + 1
+              ];
           }
 
           currentCellOnCheck = this.game.children[i];
@@ -913,6 +1039,7 @@ class MineSweeperGame {
   }
 
   openResultWindow() {
+    clearInterval(this.timerIdForStop);
     this.resultWindow.classList.add("window_result");
     this.resultText.classList.add("result_text");
     this.resultOKButton.classList.add("button_ok");
@@ -921,7 +1048,20 @@ class MineSweeperGame {
     this.resultWindow.append(this.resultOKButton);
     document.body.prepend(this.resultWindow);
   }
-
+  openInputWindowForName() {
+    this.resultsInputBlock.classList.add("window_name");
+    console.log(this.winGame);
+    this.resultsInputBlockTitle.classList.add("window_name_title");
+    this.resultsInputBlockTitle.textContent = "Enter your name";
+    this.resultsInputBlockInput.setAttribute("id", "player");
+    this.resultsInputBlockInput.setAttribute("type", "text");
+    this.resultsInputBlockSubmit.classList.add("button_submit");
+    this.resultsInputBlockSubmit.textContent = "Submit";
+    this.resultsInputBlock.append(this.resultsInputBlockTitle);
+    this.resultsInputBlock.append(this.resultsInputBlockInput);
+    this.resultsInputBlock.append(this.resultsInputBlockSubmit);
+    document.body.prepend(this.resultsInputBlock);
+  }
   makeResultMessage(cellCurrentRowPosition, cellCurrentColumnPosition) {
     clearInterval(this.timerIdForStop);
     if (
@@ -946,16 +1086,37 @@ class MineSweeperGame {
     }
   }
 
-  pressOKonCloseWindow() {
-    clearInterval(this.timerIdForStop);
+  pressOKonCloseWindow(event) {
     console.log(this.game.children.length);
     if (document.body.children[0].classList.contains("window_result")) {
       document.body.children[0].remove();
     }
+    if (this.winGame !== 0) {
+      console.log(this.winGame);
+      this.openInputWindowForName();
+    } else {
+      this.resetAllResultsOfGame();
+    }
+  }
+
+  pressSubmitButtonOnNameWindow() {
+    this.resultsName = this.resultsInputBlockInput.value;
+    console.log(this.resultsName);
+    this.makeNoteInResults();
+    if (document.body.children[0].classList.contains("window_name")) {
+      document.body.children[0].remove();
+    }
+    this.resetAllResultsOfGame();
+  }
+
+  resetAllResultsOfGame(event) {
     for (let i = this.numberOfCells - 1; i >= 0; i--) {
       // console.log(this.game.children.length);
       this.game.children[i].remove();
     }
+    this.setNewSizeOfField(event);
+    this.setNewSizwOFGameGrid();
+    this.setNewNumberOfMines(event);
     this.numberOfCells = this.rows * this.columms;
     this.receiveMineSweeperBoard();
     this.seconds = 0;
@@ -966,6 +1127,8 @@ class MineSweeperGame {
     this.numberOfLeftClicks.textContent = `Number of movements: ${this.clickscount}`;
     this.counterOfMines.textContent = `Number of hidden dreaming cats: 0`;
     this.counterOfTime.textContent = `Duration: 00:00 min`;
+    this.markForRangeEvent = 0;
+    this.winGame = 0;
   }
 
   makeValidationForWinningForMarkedSells(
@@ -989,14 +1152,41 @@ class MineSweeperGame {
         }
       }
     }
-    if (this.counterOfMarkedKittens === this.mines) {
+    if (
+      this.counterOfMarkedKittens === this.mines &&
+      this.counterForRestCellsWithOutBombs === this.numberOfCells - this.mines
+    ) {
       this.makeResultMessage(cellCurrentRowPosition, cellCurrentColumnPosition);
       this.openResultWindow();
+      this.winGame = 1;
     }
     this.counterOfMarkedKittens = 0;
+    this.counterForRestCellsWithOutBombs = 0;
   }
 
   makeValidationForWinningForRestUnOpenedSells(
+    cellCurrentRowPosition,
+    cellCurrentColumnPosition
+  ) {
+    this.countCellsWithOutClassOpened(
+      cellCurrentRowPosition,
+      cellCurrentColumnPosition
+    );
+    // console.log(this.counterForRestCellsWithOutBombs);
+    if (
+      this.counterForRestCellsWithOutBombs ===
+      this.numberOfCells - this.mines
+    ) {
+      console.log(this.counterForRestCellsWithOutBombs);
+      this.makeResultMessage(cellCurrentRowPosition, cellCurrentColumnPosition);
+      this.openResultWindow();
+      this.winGame = 1;
+    }
+    this.counterForRestCellsWithOutBombs = 0;
+    // clearInterval(this.timerIdForStop);
+  }
+
+  countCellsWithOutClassOpened(
     cellCurrentRowPosition,
     cellCurrentColumnPosition
   ) {
@@ -1017,19 +1207,9 @@ class MineSweeperGame {
         }
       }
     }
-    // console.log(this.counterForRestCellsWithOutBombs);
-    if (
-      this.counterForRestCellsWithOutBombs ===
-      this.numberOfCells - this.mines
-    ) {
-      console.log(this.counterForRestCellsWithOutBombs);
-      this.makeResultMessage(cellCurrentRowPosition, cellCurrentColumnPosition);
-      this.openResultWindow();
-    }
-    this.counterForRestCellsWithOutBombs = 0;
   }
-
   setNewSizeOfField(event) {
+    clearInterval(this.timerIdForStop);
     if (this.sizeEasy.checked) {
       this.rows = parseInt(this.sizeEasy.getAttribute("id"));
       this.columms = parseInt(this.sizeEasy.getAttribute("id"));
@@ -1043,19 +1223,65 @@ class MineSweeperGame {
       this.columms = parseInt(this.sizeHard.getAttribute("id"));
       console.log(this.rows);
     }
+    this.markForRangeEvent = 1;
+    console.log(this.markForRangeEvent);
   }
   setNewSizwOFGameGrid() {
     this.game.style.gridTemplateColumns = `repeat(${this.columms}, auto)`;
     this.game.style.gridTemplateRows = `repeat(${this.rows}, auto)`;
   }
 
-  setNewNumberOfMines() {
+  setNewNumberOfMines(event) {
     console.log(this.numberOfMinesInput.value);
     this.mines = this.numberOfMinesInput.value;
     console.log(this.mines);
-    this.numberOfMinesInput.setAttribute('value', this.mines);
+    this.numberOfMinesInput.setAttribute("value", this.mines);
     this.numberOfMinesTitle.textContent = `Number of kittens: ${this.mines} kittens`;
     this.numberOfMinesForCounter = this.mines;
+    this.markForRangeEvent = 1;
+  }
+
+  setWhiteTheme() {
+    document.body.style.background = `url(./assets/images/blacktheme.jpg)`;
+    document.body.style.backgroundPosition = "cover";
+    document.body.style.backgroundSize = "100% 100%";
+    this.durationAndGameContainer.style.color = "#FFFFFF";
+    this.toolsScoreContainer.style.color = "#FFFFFF";
+    this.buttonStartNewGame.style.color = "#000000";
+    for (let i = 0; i < this.game.children.length; i++) {
+      if (!this.game.children[i].classList.contains("opened")) {
+        this.game.children[i].style.background = "#fafafa";
+      }
+    }
+    this.tools.style.background = "#fafafa";
+    this.tools.style.color = "#000000";
+    this.buttonStartNewGame.style.background = "#fafafa";
+    this.buttonStartNewGame.style.color = "#000000";
+    this.resultWindow.style.background = "#fafafa";
+    this.resultWindow.style.color = "#000000";
+    this.resultsTable.style.background = "#fafafa";
+    this.resultsTable.style.color = "#000000";
+  }
+
+  setBlackTheme() {
+    document.body.style.background = `url(./assets/images/whitetheme.jpg)`;
+    document.body.style.backgroundPosition = "cover";
+    document.body.style.backgroundSize = "100% 100%";
+    this.durationAndGameContainer.style.color = "#000000";
+    this.toolsScoreContainer.style.color = "#000000";
+    for (let i = 0; i < this.game.children.length; i++) {
+      if (!this.game.children[i].classList.contains("opened")) {
+        this.game.children[i].style.background = "#000000";
+      }
+    }
+    this.tools.style.background = "#000000";
+    this.tools.style.color = "#FFFFFF";
+    this.buttonStartNewGame.style.background = "#000000";
+    this.buttonStartNewGame.style.color = "#FFFFFF";
+    this.resultWindow.style.background = "#000000";
+    this.resultWindow.style.color = "#FFFFFF";
+    this.resultsTable.style.background = "#000000";
+    this.resultsTable.style.color = "#FFFFFF";
   }
 }
 
@@ -1063,7 +1289,7 @@ let gameMiner = new MineSweeperGame();
 // console.log(gameMiner);
 gameMiner.receiveMineSweeperGame();
 gameMiner.receiveMineSweeperBoard();
-gameMiner.game.addEventListener("click", event => {
+gameMiner.game.addEventListener("click", (event) => {
   gameMiner.receiveNumberOfClicks(event);
   // console.log(gameMiner.clickscount);
   if (gameMiner.clickscount === 1) {
@@ -1071,31 +1297,39 @@ gameMiner.game.addEventListener("click", event => {
   }
   gameMiner.openCell(event);
 });
-gameMiner.game.addEventListener("contextmenu", event => {
+gameMiner.game.addEventListener("contextmenu", (event) => {
   gameMiner.openCell(event);
 });
-gameMiner.resultOKButton.addEventListener("click", event => {
+gameMiner.resultOKButton.addEventListener("click", (event) => {
   gameMiner.pressOKonCloseWindow(event);
 });
-gameMiner.buttonStartNewGame.addEventListener("click", event => {
+gameMiner.buttonStartNewGame.addEventListener("click", (event) => {
   gameMiner.setNewSizwOFGameGrid();
   gameMiner.pressOKonCloseWindow(event);
 });
-
-gameMiner.sizeEasy.addEventListener("change", event => {
-  // console.log(event);
-  gameMiner.setNewSizeOfField(event);
-});
-gameMiner.sizeMedium.addEventListener("change", event => {
-  // console.log(event);
-  gameMiner.setNewSizeOfField(event);
-});
-gameMiner.sizeHard.addEventListener("change", event => {
-  // console.log(event);
-  gameMiner.setNewSizeOfField(event);
+gameMiner.resultsInputBlockSubmit.addEventListener("click", (event) => {
+  gameMiner.pressSubmitButtonOnNameWindow(event);
 });
 
-gameMiner.numberOfMinesInput.addEventListener("change", event => {
+gameMiner.sizeEasy.addEventListener("change", (event) => {
+  // console.log(event);
+  gameMiner.setNewSizeOfField(event);
+});
+gameMiner.sizeMedium.addEventListener("change", (event) => {
+  // console.log(event);
+  gameMiner.setNewSizeOfField(event);
+});
+gameMiner.sizeHard.addEventListener("change", (event) => {
+  // console.log(event);
+  gameMiner.setNewSizeOfField(event);
+});
+gameMiner.numberOfMinesInput.addEventListener("change", (event) => {
   // console.log(event);
   gameMiner.setNewNumberOfMines(event);
+});
+gameMiner.whiteThemeInput.addEventListener("change", (event) => {
+  gameMiner.setWhiteTheme(event);
+});
+gameMiner.blackThemeInput.addEventListener("change", (event) => {
+  gameMiner.setBlackTheme(event);
 });

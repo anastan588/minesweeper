@@ -104,7 +104,7 @@ h6 {
 /*variables*/
 /*variables*/
 body {
-  background: url(../images/1679317128_bogatyr-club-p-zastavka-na-rabochii-stol-koti-foni-vkonta-3.jpg);
+  background: url(../images/whitetheme.jpg);
   display: flex;
   background-position: cover;
   background-size: 100% 100%;
@@ -117,7 +117,8 @@ body {
   box-sizing: border-box;
   display: flex;
   width: 100%;
-  justify-content: space-around;
+  justify-content: center;
+  gap: 40px;
   padding: 40px 0px;
 }
 
@@ -135,18 +136,27 @@ body {
 
 .title_block {
   font-size: 200%;
+  font-style: bold;
 }
 
 .tools_block {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  border: 1px solid #c8c8c8;
+  padding: 10px;
+  border-radius: 5px;
+  background: #000000;
+  color: #ffffff;
 }
 
 .tools_title {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  font-style: italic;
+  font-size: 120%;
+  font-style: 700;
 }
 
 .size_block {
@@ -155,14 +165,60 @@ body {
   gap: 15px;
 }
 
+.size_title {
+  font-style: italic;
+}
+
 .size_form {
   display: flex;
   gap: 10px;
 }
 
+input[type=radio] {
+  background-color: #cc0002;
+}
+
 .number_mines_block {
   display: flex;
   flex-direction: column;
+  gap: 10px;
+}
+
+.number_mines_title {
+  font-style: italic;
+}
+
+#numberOfMines {
+  max-width: 200px;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  border-radius: 10px/100%;
+  height: 12px;
+  border: 1px solid #000000;
+  background-color: #fff;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  cursor: pointer;
+  width: 12px;
+  height: 12px;
+  margin-top: -3px;
+  background: #c8c8c8;
+}
+
+.theme_block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.theme_title {
+  font-style: italic;
+}
+
+.theme_form {
+  display: flex;
   gap: 10px;
 }
 
@@ -172,7 +228,8 @@ body {
   border: 4px outset;
   padding: 15px 20px;
   cursor: pointer;
-  background: #fafafa;
+  color: #ffffff;
+  background: #000000;
 }
 
 .duration_block {
@@ -202,7 +259,7 @@ body {
   box-sizing: border-box;
   height: 20px;
   width: 20px;
-  background: #fafafa;
+  background: #000000;
   border: 2px outset;
   cursor: pointer;
   font-size: 120%;
@@ -277,7 +334,8 @@ body {
   margin-right: -50%;
   transform: translate(-50%, -50%);
   z-index: 2;
-  background-color: #fafafa;
+  background-color: #000000;
+  color: #ffffff;
 }
 
 .result_text {
@@ -291,4 +349,61 @@ body {
   padding: 10px 15px;
   border: 1px solid #5f5f5f;
   cursor: pointer;
+}
+
+.results_block {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+}
+
+.results_title {
+  line-height: 100%;
+  font-size: 120%;
+  font-style: italic;
+}
+
+.results_table {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  color: #ffffff;
+  background-color: #000000;
+  border: 4px outset;
+}
+
+.results_line {
+  display: flex;
+  justify-content: stretch;
+}
+
+.results_item {
+  padding: 5px 15px;
+  border-bottom: 1px solid #c8c8c8;
+}
+
+.window_name {
+  position: fixed;
+  max-width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  font-size: 110%;
+  border: 4px outset;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.button_submit {
+  cursor: pointer;
+  max-width: 90px;
+  padding: 10px 15px;
+  border: 1px solid #5f5f5f;
 }/*# sourceMappingURL=style.css.map */
