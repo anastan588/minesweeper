@@ -131,7 +131,7 @@ body {
 .container_tools {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
 }
 
 .title_block {
@@ -139,30 +139,63 @@ body {
   font-style: bold;
 }
 
+.start_button {
+  max-width: 250px;
+  text-align: center;
+  border: 4px outset;
+  padding: 10px 20px;
+  cursor: pointer;
+  color: #ffffff;
+  background: #000000;
+}
+
 .tools_block {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  border: 1px solid #c8c8c8;
-  padding: 10px;
-  border-radius: 5px;
-  background: #000000;
   color: #ffffff;
 }
 
 .tools_title {
+  max-width: 250px;
+  text-align: center;
+  border: 4px outset;
+  padding: 10px 20px;
   display: flex;
   flex-direction: column;
   gap: 15px;
   font-style: italic;
-  font-size: 120%;
   font-style: 700;
+  background: #000000;
+  cursor: pointer;
+}
+
+.settings_container {
+  max-width: 250px;
+  height: 0%;
+  display: flex;
+  flex-direction: column;
+  padding: 0px;
+  gap: 10px;
+  background: #000000;
+  transition: 1s all ease-out;
+  overflow: hidden;
+}
+
+.settigs_open {
+  display: flex;
+  height: 100%;
+  padding: 10px;
+  border: 4px outset;
 }
 
 .size_block {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
+}
+
+.size_open {
+  height: 100%;
 }
 
 .size_title {
@@ -189,7 +222,7 @@ input[type=radio] {
 }
 
 #numberOfMines {
-  max-width: 200px;
+  max-width: 170px;
 }
 
 input[type=range]::-webkit-slider-runnable-track {
@@ -237,16 +270,6 @@ input[type=range]::-webkit-slider-thumb {
   gap: 10px;
 }
 
-.start_button {
-  max-width: 200px;
-  text-align: center;
-  border: 4px outset;
-  padding: 15px 20px;
-  cursor: pointer;
-  color: #ffffff;
-  background: #000000;
-}
-
 .duration_block {
   display: flex;
   flex-direction: column;
@@ -271,6 +294,7 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 .cell {
+  position: relative;
   box-sizing: border-box;
   height: 20px;
   width: 20px;
@@ -286,6 +310,28 @@ input[type=range]::-webkit-slider-thumb {
   color: rgba(255, 255, 255, 0);
 }
 
+.cross1 {
+  position: absolute;
+  top: 8px;
+  left: -1px;
+  width: 20px;
+  height: 2px;
+  background: #000000;
+  transform: rotate(45deg);
+  background: red;
+}
+
+.cross2 {
+  position: absolute;
+  top: 8px;
+  left: -1px;
+  width: 20px;
+  height: 2px;
+  background: #000000;
+  transform: rotate(-45deg);
+  background: red;
+}
+
 .mine {
   height: 100%;
   width: 100%;
@@ -299,7 +345,6 @@ input[type=range]::-webkit-slider-thumb {
 .opened {
   border: 1px solid #5f5f5f;
   background: #c8c8c8;
-  color: red;
 }
 
 .one {
@@ -370,15 +415,25 @@ input[type=range]::-webkit-slider-thumb {
   display: flex;
   flex-direction: column;
   gap: 0px;
+  color: #ffffff;
 }
 
 .results_title {
+  max-width: 250px;
   line-height: 100%;
   font-size: 120%;
   font-style: italic;
+  text-align: center;
+  border: 4px outset;
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  background: #000000;
+  cursor: pointer;
 }
 
 .results_table {
+  max-width: 250px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -395,6 +450,7 @@ input[type=range]::-webkit-slider-thumb {
 .results_item {
   padding: 5px 15px;
   border-bottom: 1px solid #c8c8c8;
+  flex-basis: 33.33%;
 }
 
 .window_name {
@@ -414,6 +470,11 @@ input[type=range]::-webkit-slider-thumb {
   z-index: 2;
   background-color: #000000;
   color: #ffffff;
+}
+
+input[type=text] {
+  background-color: #c8c8c8;
+  height: 25px;
 }
 
 .button_submit {

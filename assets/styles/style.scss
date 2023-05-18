@@ -151,39 +151,72 @@ body {
 .container_tools {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
 }
+
 .title_block {
   font-size: 200%;
   font-style: bold;
   // text-align: center;
 }
+.start_button {
+  max-width: 250px;
+  text-align: center;
+  border: 4px outset;
+  padding: 10px 20px;
+  cursor: pointer;
+  color: $font-color_white;
+  background: $cell_color;
+}
 .tools_block {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  border: 1px solid $color_active_cells;
-  padding: 10px;
-  border-radius: 5px;
-  background: $cell_color;
   color: $font-color_white;
 }
 
 .tools_title {
+  max-width: 250px;
+  text-align: center;
+  border: 4px outset;
+  padding: 10px 20px;
   display: flex;
   flex-direction: column;
   gap: 15px;
   font-style: italic;
-  font-size: 120%;
   font-style: 700;
+  background: $cell_color;
+  cursor: pointer;
+}
+
+.settings_container {
+  // box-sizing: border-box;
+  max-width: 250px;
+  height: 0%;
+  display: flex;
+  flex-direction: column;
+  padding: 0px;
+  gap: 10px;
+  // border: 4px outset;
+  background: $cell_color;
+  transition: 1s all ease-out;
+  overflow: hidden;
+}
+
+.settigs_open {
+  display: flex;
+  height: 100%;
+  padding: 10px;
+  border: 4px outset;
 }
 
 .size_block {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
 }
-
+.size_open {
+  height: 100%;
+}
 .size_title {
   font-style: italic;
 }
@@ -193,8 +226,9 @@ body {
   // flex-direction: column;
   gap: 10px;
 }
-input[type=radio] {
- background-color: $color_three_digit;
+
+input[type="radio"] {
+  background-color: $color_three_digit;
 }
 
 .number_mines_block {
@@ -206,7 +240,7 @@ input[type=radio] {
   font-style: italic;
 }
 #numberOfMines {
-  max-width: 200px;
+  max-width: 170px;
 }
 
 input[type="range"]::-webkit-slider-runnable-track {
@@ -249,15 +283,6 @@ input[type="range"]::-webkit-slider-thumb {
   display: flex;
   gap: 10px;
 }
-.start_button {
-  max-width: 200px;
-  text-align: center;
-  border: 4px outset;
-  padding: 15px 20px;
-  cursor: pointer;
-  color: $font-color_white;
-  background: $cell_color;
-}
 
 .duration_block {
   display: flex;
@@ -282,6 +307,7 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .cell {
+  position: relative;
   box-sizing: border-box;
   height: 20px;
   width: 20px;
@@ -301,7 +327,27 @@ input[type="range"]::-webkit-slider-thumb {
 //   border: 2px solid $color_border_cells;
 //   background: $color_active_cells;
 // }
+.cross1 {
+  position: absolute;
+  top: 8px;
+  left: -1px;
+  width: 20px;
+  height: 2px;
+  background: $font-color;
+  transform: rotate(45deg);
+  background: red;
+}
 
+.cross2 {
+  position: absolute;
+  top: 8px;
+  left: -1px;
+  width: 20px;
+  height: 2px;
+  background: $font-color;
+  transform: rotate(-45deg);
+  background: red;
+}
 .mine {
   height: 100%;
   width: 100%;
@@ -315,7 +361,7 @@ input[type="range"]::-webkit-slider-thumb {
   border: 1px solid $color_border_cells;
   background: $color_active_cells;
   // color: rgba(100%, 100%, 100%, 1);
-  color: red;
+  // color: red;
 }
 
 .one {
@@ -380,18 +426,27 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
 }
 
-
 .results_block {
   display: flex;
   flex-direction: column;
   gap: 0px;
+  color: $font-color_white;
 }
 .results_title {
+  max-width: 250px;
   line-height: 100%;
-  font-size: 120%; 
+  font-size: 120%;
   font-style: italic;
+  text-align: center;
+  border: 4px outset;
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  background: $cell_color;
+  cursor: pointer;
 }
 .results_table {
+  max-width: 250px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -401,12 +456,13 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .results_line {
- display: flex;
- justify-content: stretch;
+  display: flex;
+  justify-content: stretch;
 }
 .results_item {
   padding: 5px 15px;
   border-bottom: 1px solid $color_active_cells;
+  flex-basis: 33.33%;
 }
 
 .window_name {
@@ -427,18 +483,19 @@ input[type="range"]::-webkit-slider-thumb {
   background-color: $cell_color;
   color: $font-color_white;
 }
-
+input[type="text"] {
+  background-color: $color_active_cells;
+  height: 25px;
+}
 .window_name_title {
-
 }
 
 #player {
-
 }
 
 .button_submit {
- cursor:pointer;
- max-width: 90px;
+  cursor: pointer;
+  max-width: 90px;
   padding: 10px 15px;
   border: 1px solid $color_border_cells;
 }
