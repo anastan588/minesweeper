@@ -6,7 +6,7 @@ class MineSweeperGame {
     this.numberOfCells = rows * columms;
     this.numberOfMinesForCounter = mines;
     this.clickscount = 0;
-    this.productiveClicksCount =0;
+    this.productiveClicksCount = 0;
     this.seconds = 0;
     this.minutes = 0;
     this.timerIdForStop;
@@ -22,7 +22,7 @@ class MineSweeperGame {
     this.audioForOpenCell = new Audio("./assets/audio/opensound.mp3");
     this.audioForFlagCell = new Audio("./assets/audio/flagsound.mp3");
     this.audioForMineCell = new Audio("./assets/audio/kitten2sound.mp3");
-    console.log(this.audioForOpenCell);
+    // console.log(this.audioForOpenCell);
     this.mainContainer = document.createElement("div");
     this.toolsScoreContainer = document.createElement("div");
     this.durationAndGameContainer = document.createElement("div");
@@ -43,6 +43,8 @@ class MineSweeperGame {
     this.tools = document.createElement("div");
     this.settigsTitle = document.createElement("div");
     this.settingsCommonBlock = document.createElement("div");
+    this.settingsCloseIcon = document.createElement("div");
+    this.settingsCloseIconImage = document.createElement("img");
     this.sizeOfGame = document.createElement("div");
     this.sizeOfGameTitle = document.createElement("div");
     this.sizeForm = document.createElement("form");
@@ -71,6 +73,8 @@ class MineSweeperGame {
     this.offSoundInput = document.createElement("input");
     // results block
     this.resultsBlock = document.createElement("div");
+    this.resultsCloseIcon = document.createElement("div");
+    this.resultsCloseIconImage = document.createElement("img");
     this.resultsTitle = document.createElement("div");
     this.resultsTable = document.createElement("div");
     this.resultsTableLine = document.createElement("div");
@@ -84,6 +88,12 @@ class MineSweeperGame {
     this.resultsInputBlockTitle = document.createElement("div");
     this.resultsInputBlockInput = document.createElement("input");
     this.resultsInputBlockSubmit = document.createElement("div");
+    // saveresults
+    this.gameForSaveIfUserCloseOrReloadWindow = new Object();
+    this.gameFromSave = new Object();
+    this.arrayForNames = new Array();
+    this.arrayForClicks =  new Array();
+    this.arrayForTime = [];
   }
 
   receiveMineSweeperGame() {
@@ -128,8 +138,11 @@ class MineSweeperGame {
     this.settigsTitle.classList.add("tools_title");
     this.settigsTitle.textContent = "Settings";
     this.tools.append(this.settigsTitle);
+    this.receiveSettigsWindow();
+  }
+
+  receiveSettigsWindow() {
     this.settingsCommonBlock.classList.add("settings_container");
-    this.tools.append(this.settingsCommonBlock);
     this.sizeOfGame.classList.add("size_block");
     this.sizeOfGameTitle.classList.add("size_title");
     this.sizeOfGameTitle.textContent = `Size of game:`;
@@ -147,6 +160,7 @@ class MineSweeperGame {
     this.blackThemeInput.setAttribute("id", "black");
     this.blackThemeInput.setAttribute("type", "radio");
     this.blackThemeInput.setAttribute("name", "theme");
+    this.blackThemeInput.classList.add("input_radio");
     this.blackThemeInput.checked = true;
     this.themeForm.append(this.blackThemeInput);
     this.themeForm.append(this.blackThemeTitle);
@@ -155,6 +169,7 @@ class MineSweeperGame {
     this.whiteThemeInput.setAttribute("id", "white");
     this.whiteThemeInput.setAttribute("type", "radio");
     this.whiteThemeInput.setAttribute("name", "theme");
+    this.whiteThemeInput.classList.add("input_radio");
     this.themeForm.append(this.whiteThemeInput);
     this.themeForm.append(this.whiteThemeTitle);
     this.soundTitle.classList.add("sound_title");
@@ -167,6 +182,7 @@ class MineSweeperGame {
     this.onSoundInput.setAttribute("id", "on");
     this.onSoundInput.setAttribute("type", "radio");
     this.onSoundInput.setAttribute("name", "sound");
+    this.onSoundInput.classList.add("input_radio");
     this.onSoundInput.checked = true;
     this.soundForm.append(this.onSoundInput);
     this.soundForm.append(this.onSoundTitle);
@@ -175,6 +191,7 @@ class MineSweeperGame {
     this.offSoundInput.setAttribute("id", "off");
     this.offSoundInput.setAttribute("type", "radio");
     this.offSoundInput.setAttribute("name", "sound");
+    this.offSoundInput.classList.add("input_radio");
     this.soundForm.append(this.offSoundInput);
     this.soundForm.append(this.offSoundTitle);
     this.settingsCommonBlock.append(this.sizeOfGame);
@@ -184,6 +201,7 @@ class MineSweeperGame {
     this.sizeEasyTitle.textContent = "10x10";
     this.sizeEasyTitle.setAttribute("for", "10");
     this.sizeEasy.setAttribute("id", "10");
+    this.sizeEasy.classList.add("input_radio");
     this.sizeEasy.checked = true;
     this.sizeEasy.setAttribute("type", "radio");
     this.sizeEasy.setAttribute("name", "size");
@@ -194,6 +212,7 @@ class MineSweeperGame {
     this.sizeMedium.setAttribute("id", "15");
     this.sizeMedium.setAttribute("type", "radio");
     this.sizeMedium.setAttribute("name", "size");
+    this.sizeMedium.classList.add("input_radio");
     this.sizeForm.append(this.sizeMedium);
     this.sizeForm.append(this.sizeMediumTitle);
     this.sizeHardTitle.textContent = "25x25";
@@ -201,6 +220,7 @@ class MineSweeperGame {
     this.sizeHard.setAttribute("id", "25");
     this.sizeHard.setAttribute("type", "radio");
     this.sizeHard.setAttribute("name", "size");
+    this.sizeHard.classList.add("input_radio");
     this.sizeForm.append(this.sizeHard);
     this.sizeForm.append(this.sizeHardTitle);
     this.numberOfMines.classList.add("number_mines_block");
@@ -214,7 +234,22 @@ class MineSweeperGame {
     this.numberOfMinesInput.setAttribute("min", 10);
     this.numberOfMinesInput.setAttribute("max", 99);
     this.numberOfMinesInput.setAttribute("step", 1);
+    this.numberOfMinesInput.classList.add("input_range");
     this.numberOfMines.append(this.numberOfMinesInput);
+    this.settingsCloseIcon.classList.add("close-button");
+    console.log(this.settingsCloseIcon);
+    console.log(this.settingsCloseIconImage);
+    if (this.whiteThemeInput.checked) {
+      this.settingsCloseIconImage.src = "./assets/icons/closeBlack.png";
+    } else if (this.blackThemeInput.checked) {
+      this.settingsCloseIconImage.src = "./assets/icons/closeWhite.png";
+    }
+    console.log(this.settingsCloseIconImage.src);
+    this.settingsCloseIconImage.alt = "close";
+    this.settingsCloseIconImage.classList.add("close-image");
+    console.log(this.settingsCloseIcon);
+    this.settingsCommonBlock.prepend(this.settingsCloseIcon);
+    this.settingsCloseIcon.append(this.settingsCloseIconImage);
   }
 
   receiveResultsBlock() {
@@ -223,8 +258,21 @@ class MineSweeperGame {
     this.resultsTitle.classList.add("results_title");
     this.resultsTitle.textContent = "Results";
     this.resultsBlock.append(this.resultsTitle);
+    this.receiveResultsTable();
+  }
+
+  receiveResultsTable() {
     this.resultsTable.classList.add("results_table");
-    this.resultsBlock.append(this.resultsTable);
+    this.resultsCloseIcon.classList.add("close-button");
+    if (this.whiteThemeInput.checked) {
+      this.resultsCloseIconImage.src = "./assets/icons/closeBlack.png";
+    } else if (this.blackThemeInput.checked) {
+      this.resultsCloseIconImage.src = "./assets/icons/closeWhite.png";
+    }
+    this.resultsCloseIconImage.alt = "close";
+    this.resultsCloseIconImage.classList.add("close-image");
+    this.resultsTable.append(this.resultsCloseIcon);
+    this.resultsCloseIcon.append(this.resultsCloseIconImage);
     this.resultsTableLine.classList.add("results_line");
     this.resultsTable.append(this.resultsTableLine);
     this.resultsItemName.classList.add("results_item");
@@ -238,9 +286,41 @@ class MineSweeperGame {
     this.resultsTableLine.append(this.resultsItemDuration);
   }
 
+  receiveResultsTablefromSave() {
+    if (localStorage.getItem('savedGameMineSweeper')) {
+    console.log(this.arrayForClicks);
+    if (this.gameFromSave.cliks != undefined) {
+      this.arrayForNames = [...this.gameFromSave.name];
+      this.arrayForClicks = [...this.gameFromSave.clicks];
+      this.arrayForTime = [...this.gameFromSave.time];
+      for (let i = 0; i < this.arrayForClicks.length; i++) {
+        let resultsTableLine = document.createElement("div");
+        resultsTableLine.classList.add("results_line");
+        this.resultsTable.append(resultsTableLine);
+        let resultsItemName = document.createElement("div");
+        resultsItemName.classList.add("results_item");
+        resultsItemName.textContent = this.arrayForNames[i];
+        resultsTableLine.append(resultsItemName);
+        let resultsItemClicks = document.createElement("div");
+        resultsItemClicks.classList.add("results_item");
+        resultsItemClicks.textContent = this.arrayForClicks[i];
+        resultsTableLine.append(resultsItemClicks);
+        let resultsItemDuration = document.createElement("div");
+        resultsItemDuration.classList.add("results_item");
+        resultsItemDuration.textContent = this.arrayForTime[i];
+        resultsTableLine.append(resultsItemDuration);
+      }
+    }
+    }
+    
+  }
+
   makeNoteInResults() {
-    if (this.resultsTable.children.length >= 10) {
-      this.resultsTable.children[1].remove();
+    if (this.resultsTable.children.length >= 11) {
+      this.resultsTable.children[2].remove();
+      this.arrayForNames.shift();
+      this.arrayForCliks.shift();
+      this.arrayForTime.shift();
     }
     let resultsTableLine = document.createElement("div");
     resultsTableLine.classList.add("results_line");
@@ -260,6 +340,13 @@ class MineSweeperGame {
       15
     )}`;
     resultsTableLine.append(resultsItemDuration);
+    console.log(this.resultsName);
+    this.arrayForNames.push(this.resultsName);
+    this.arrayForClicks.push(this.productiveClicksCount);
+    this.arrayForTime.push(resultsItemDuration.textContent);
+    console.log(this.arrayForNames);
+    console.log(this.arrayForClicks);
+    console.log(this.arrayForTime);
   }
 
   receiveMineSweeperBoard() {
@@ -286,26 +373,26 @@ class MineSweeperGame {
     }
     if (event.target.tagName == "DIV") {
       this.cellUnderClick = event.target;
-      console.log(this.cellUnderClick);
+      // console.log(this.cellUnderClick);
     } else {
       this.cellUnderClick = event.target.parentNode;
-      console.log(this.cellUnderClick);
+      // console.log(this.cellUnderClick);
     }
     if (
       !this.cellUnderClick.classList.contains("opened") &&
       !this.cellUnderClick.classList.contains("marked")
     ) {
       this.productiveClicksCount += 1;
-      console.log(this.productiveClicksCount);
+      // console.log(this.productiveClicksCount);
       this.numberOfLeftClicks.textContent = `Number of movements: ${this.productiveClicksCount}`;
     }
     this.clickscount += 1;
     if (this.clickscount === 1) {
-      setTimeout(function () {
+      setTimeout(function() {
         gameMiner.countTime();
-        console.log('start');
+        // console.log('start');
       }, 0);
-      this.timerIdForStop = setInterval(function () {
+      this.timerIdForStop = setInterval(function() {
         gameMiner.countTime();
       }, 1000);
     }
@@ -313,7 +400,7 @@ class MineSweeperGame {
 
   receiveMinesField(event) {
     // console.log(event);
-    console.log(event.target);
+    // console.log(event.target);
     if (
       !this.cell &&
       !this.cell.contains.classList.contains("opened") &&
@@ -342,7 +429,7 @@ class MineSweeperGame {
         cellWithOutBombRowPosition,
         cellWithOutBombColumnPosition
       );
-      console.log(this.minesField);
+      // console.log(this.minesField);
       this.receiveNumberOfMinesAround();
       // this.fillMinesBoardFromMinesField();
       this.counterOfMines.textContent = `Number of hidden dreaming cats: ${this.numberOfMinesForCounter}`;
@@ -377,7 +464,7 @@ class MineSweeperGame {
         }
       }
     }
-    console.log(count);
+    // console.log(count);
   }
 
   receiveNumberOfMinesAround() {
@@ -451,8 +538,9 @@ class MineSweeperGame {
       let currentCellColumn = parseInt(
         this.game.children[i].dataset.position.split(",")[1]
       );
-      this.game.children[i].textContent =
-        this.minesField[currentCellRow][currentCellColumn];
+      this.game.children[i].textContent = this.minesField[currentCellRow][
+        currentCellColumn
+      ];
     }
   }
 
@@ -484,7 +572,7 @@ class MineSweeperGame {
       } else {
         if (event.target.tagName == "DIV") {
           this.currentCell = event.target;
-          console.log(this.currentCell);
+          // console.log(this.currentCell);
         } else {
           this.currentCell = event.target.parentNode;
           console.log(this.currentCell);
@@ -534,10 +622,9 @@ class MineSweeperGame {
               ] !== 0
             ) {
               this.audioForOpenCell.play();
-              this.currentCell.textContent =
-                this.minesField[cellCurrentRowPosition][
-                  cellCurrentColumnPosition
-                ];
+              this.currentCell.textContent = this.minesField[
+                cellCurrentRowPosition
+              ][cellCurrentColumnPosition];
               this.makeDigitsColorful(
                 cellCurrentRowPosition,
                 cellCurrentColumnPosition
@@ -671,10 +758,9 @@ class MineSweeperGame {
                 cellCurrentColumnPosition - 1
               ] !== 0
             ) {
-              this.game.children[i].innerHTML =
-                this.minesField[cellCurrentRowPosition - 1][
-                  cellCurrentColumnPosition - 1
-                ];
+              this.game.children[i].innerHTML = this.minesField[
+                cellCurrentRowPosition - 1
+              ][cellCurrentColumnPosition - 1];
             }
             // console.log(currentCellOnCheck);
             this.makeDigitsColorful(
@@ -724,10 +810,9 @@ class MineSweeperGame {
                 cellCurrentColumnPosition
               ] !== 0
             ) {
-              this.game.children[i].innerHTML =
-                this.minesField[cellCurrentRowPosition - 1][
-                  cellCurrentColumnPosition
-                ];
+              this.game.children[i].innerHTML = this.minesField[
+                cellCurrentRowPosition - 1
+              ][cellCurrentColumnPosition];
             }
             this.makeDigitsColorful(
               cellCurrentRowPosition - 1,
@@ -778,10 +863,9 @@ class MineSweeperGame {
                 cellCurrentColumnPosition + 1
               ] !== 0
             ) {
-              this.game.children[i].innerHTML =
-                this.minesField[cellCurrentRowPosition - 1][
-                  cellCurrentColumnPosition + 1
-                ];
+              this.game.children[i].innerHTML = this.minesField[
+                cellCurrentRowPosition - 1
+              ][cellCurrentColumnPosition + 1];
             }
 
             this.makeDigitsColorful(
@@ -825,10 +909,9 @@ class MineSweeperGame {
                 cellCurrentColumnPosition - 1
               ] !== 0
             ) {
-              this.game.children[i].innerHTML =
-                this.minesField[cellCurrentRowPosition][
-                  cellCurrentColumnPosition - 1
-                ];
+              this.game.children[i].innerHTML = this.minesField[
+                cellCurrentRowPosition
+              ][cellCurrentColumnPosition - 1];
             }
 
             this.makeDigitsColorful(
@@ -873,10 +956,9 @@ class MineSweeperGame {
                 cellCurrentColumnPosition + 1
               ] !== 0
             ) {
-              this.game.children[i].innerHTML =
-                this.minesField[cellCurrentRowPosition][
-                  cellCurrentColumnPosition + 1
-                ];
+              this.game.children[i].innerHTML = this.minesField[
+                cellCurrentRowPosition
+              ][cellCurrentColumnPosition + 1];
             }
             this.makeDigitsColorful(
               cellCurrentRowPosition,
@@ -921,10 +1003,9 @@ class MineSweeperGame {
                 cellCurrentColumnPosition - 1
               ] !== 0
             ) {
-              this.game.children[i].innerHTML =
-                this.minesField[cellCurrentRowPosition + 1][
-                  cellCurrentColumnPosition - 1
-                ];
+              this.game.children[i].innerHTML = this.minesField[
+                cellCurrentRowPosition + 1
+              ][cellCurrentColumnPosition - 1];
             }
             this.makeDigitsColorful(
               cellCurrentRowPosition + 1,
@@ -967,10 +1048,9 @@ class MineSweeperGame {
                 cellCurrentColumnPosition
               ] !== 0
             ) {
-              this.game.children[i].innerHTML =
-                this.minesField[cellCurrentRowPosition + 1][
-                  cellCurrentColumnPosition
-                ];
+              this.game.children[i].innerHTML = this.minesField[
+                cellCurrentRowPosition + 1
+              ][cellCurrentColumnPosition];
             }
 
             this.makeDigitsColorful(
@@ -1017,10 +1097,9 @@ class MineSweeperGame {
                 cellCurrentColumnPosition + 1
               ] !== 0
             ) {
-              this.game.children[i].innerHTML =
-                this.minesField[cellCurrentRowPosition + 1][
-                  cellCurrentColumnPosition + 1
-                ];
+              this.game.children[i].innerHTML = this.minesField[
+                cellCurrentRowPosition + 1
+              ][cellCurrentColumnPosition + 1];
             }
 
             this.makeDigitsColorful(
@@ -1213,6 +1292,7 @@ class MineSweeperGame {
   }
 
   pressOKonCloseWindow(event) {
+    event.stopPropagation();
     console.log(this.game.children.length);
     if (document.body.children[0].classList.contains("window_result")) {
       document.body.children[0].remove();
@@ -1225,7 +1305,8 @@ class MineSweeperGame {
     }
   }
 
-  pressSubmitButtonOnNameWindow() {
+  pressSubmitButtonOnNameWindow(event) {
+    event.stopPropagation();
     this.resultsName = this.resultsInputBlockInput.value;
     console.log(this.resultsName);
     this.makeNoteInResults();
@@ -1251,7 +1332,7 @@ class MineSweeperGame {
     this.seconds = 0;
     this.minutes = 0;
     this.clickscount = 0;
-    this.productiveClicksCount =0;
+    this.productiveClicksCount = 0;
     console.log(this.clickscount);
     this.numberOfMinesForCounter = this.mines;
     this.minesField = new Array(this.rows);
@@ -1347,8 +1428,9 @@ class MineSweeperGame {
           this.minesField[rowPositionOfCell][columnPositionOfCell] !== "m" &&
           this.minesField[rowPositionOfCell][columnPositionOfCell] !== 0
         ) {
-          this.game.children[i].textContent =
-            this.minesField[rowPositionOfCell][columnPositionOfCell];
+          this.game.children[i].textContent = this.minesField[
+            rowPositionOfCell
+          ][columnPositionOfCell];
           // console.log(this.game.children[i]);
           this.game.children[i].classList.add("opened");
           if (this.minesField[rowPositionOfCell][columnPositionOfCell] === 1) {
@@ -1470,8 +1552,9 @@ class MineSweeperGame {
 
   setWhiteTheme() {
     document.body.style.background = `url(./assets/images/blacktheme.jpg)`;
-    document.body.style.backgroundPosition = "cover";
-    document.body.style.backgroundSize = "100% 100%";
+    document.body.style.backgroundPosition = "50% 100%";
+    document.body.style.backgroundRepeat = "no-repeat";
+    document.body.style.backgroundSize = "cover";
     this.durationAndGameContainer.style.color = "#FFFFFF";
     this.toolsScoreContainer.style.color = "#FFFFFF";
     this.buttonStartNewGame.style.color = "#000000";
@@ -1501,6 +1584,14 @@ class MineSweeperGame {
     this.resultsTable.style.color = "#000000";
     this.resultsInputBlock.style.background = "#fafafa";
     this.resultsInputBlock.style.color = "#000000";
+    this.resultsCloseIcon.style.background = "#fafafa";
+    this.resultsCloseIcon.children[0].remove();
+    this.resultsCloseIconImage.src = "./assets/icons/closeBlack.png";
+    this.resultsCloseIcon.append(this.resultsCloseIconImage);
+    this.settingsCloseIcon.style.background = "#fafafa";
+    this.settingsCloseIcon.children[0].remove();
+    this.settingsCloseIconImage.src = "./assets/icons/closeBlack.png";
+    this.settingsCloseIcon.append(this.settingsCloseIconImage);
   }
 
   setBlackTheme() {
@@ -1535,6 +1626,14 @@ class MineSweeperGame {
     this.resultsTable.style.color = "#FFFFFF";
     this.resultsInputBlock.style.background = "#000000";
     this.resultsInputBlock.style.color = "#FFFFFF";
+    this.resultsCloseIcon.style.background = "#000000";
+    this.resultsCloseIcon.children[0].remove();
+    this.resultsCloseIconImage.src = "./assets/icons/closeWhite.png";
+    this.resultsCloseIcon.append(this.resultsCloseIconImage);
+    this.settingsCloseIcon.style.background = "#000000";
+    this.settingsCloseIcon.children[0].remove();
+    this.settingsCloseIconImage.src = "./assets/icons/closeWhite.png";
+    this.settingsCloseIcon.append(this.settingsCloseIconImage);
   }
 
   setSoundVolumeOn(event) {
@@ -1550,8 +1649,67 @@ class MineSweeperGame {
   }
 
   openSettings(event) {
-    this.settingsCommonBlock.classList.toggle('settigs_open');
-    this.sizeOfGame.classList.toggle('size_open');
+    if (document.body.children[0].classList.contains("results_table")) {
+      document.body.children[0].remove();
+    }
+    document.body.prepend(this.settingsCommonBlock);
+    // this.settingsCommonBlock.classList.toggle("settigs_open");
+    // this.blackThemeInput.classList.toggle("open_input");
+    // this.whiteThemeInput.classList.toggle("open_input");
+    // this.onSoundInput.classList.toggle("open_input");
+    // this.offSoundInput.classList.toggle("open_input");
+    // this.theme.classList.toggle("open_theme_block");
+    // this.themeForm.classList.toggle("open_theme_form");
+    // this.sizeOfGame.classList.toggle("size_open");
+    // this.sizeForm.classList.toggle("size_form_open");
+    // this.sizeEasy.classList.toggle("open_input");
+    // this.sizeMedium.classList.toggle("open_input");
+    // this.sizeHard.classList.toggle("open_input");
+    // this.sound.classList.toggle("sound_theme_block");
+    // this.soundForm.classList.toggle("sound_form_open");
+    // this.numberOfMines.classList.toggle("number_mines_open");
+    // this.numberOfMinesInput.classList.toggle("input_range_open");
+    // this.tools.classList.toggle("tools_open");
+  }
+  closeSettings(event) {
+    event.stopPropagation();
+    document.body.children[0].remove();
+  }
+  openResults(event) {
+    if (document.body.children[0].classList.contains("settings_container")) {
+      document.body.children[0].remove();
+    }
+    document.body.prepend(this.resultsTable);
+  }
+
+  closeResults(event) {
+    event.stopPropagation();
+    document.body.children[0].remove();
+  }
+
+  saveGame(event) {
+    console.log(this.arrayForClicks.length)
+  if (this.arrayForClicks.length>0) {
+    let gameForSaveIfUserCloseOrReloadWindow = {
+      name: this.arrayForNames,
+      cliks: this.arrayForClicks,
+      time: this.arrayForTime
+    };
+    let savedGame = JSON.stringify(gameForSaveIfUserCloseOrReloadWindow);
+    let value = JSON.parse(savedGame);
+    console.log(savedGame);
+    console.log(value);
+    localStorage.setItem("savedGameMineSweeper", savedGame);
+  }
+
+  }
+
+  receivePreviousGameInSave() {
+    this.gameFromSave = JSON.parse(
+      localStorage.getItem("savedGameMineSweeper")
+    );
+    console.log(this.gameFromSave);
+    this.receiveResultsTablefromSave();
   }
 }
 
@@ -1559,7 +1717,8 @@ let gameMiner = new MineSweeperGame();
 // console.log(gameMiner);
 gameMiner.receiveMineSweeperGame();
 gameMiner.receiveMineSweeperBoard();
-gameMiner.game.addEventListener("click", (event) => {
+gameMiner.receivePreviousGameInSave();
+gameMiner.game.addEventListener("click", event => {
   gameMiner.receiveNumberOfClicks(event);
   // console.log(gameMiner.clickscount);
   if (gameMiner.clickscount === 1) {
@@ -1567,50 +1726,73 @@ gameMiner.game.addEventListener("click", (event) => {
   }
   gameMiner.openCell(event);
 });
-gameMiner.game.addEventListener("contextmenu", (event) => {
+gameMiner.game.addEventListener("contextmenu", event => {
   gameMiner.openCell(event);
 });
-gameMiner.resultOKButton.addEventListener("click", (event) => {
+gameMiner.resultOKButton.addEventListener("click", event => {
   gameMiner.pressOKonCloseWindow(event);
 });
-gameMiner.buttonStartNewGame.addEventListener("click", (event) => {
+gameMiner.buttonStartNewGame.addEventListener("click", event => {
   gameMiner.setNewSizwOFGameGrid();
   gameMiner.pressOKonCloseWindow(event);
 });
-gameMiner.resultsInputBlockSubmit.addEventListener("click", (event) => {
+gameMiner.resultsInputBlockSubmit.addEventListener("click", event => {
   gameMiner.pressSubmitButtonOnNameWindow(event);
 });
 
-gameMiner.settigsTitle.addEventListener('click', (event) => {
+gameMiner.settigsTitle.addEventListener("click", event => {
   gameMiner.openSettings(event);
-})
+});
 
-gameMiner.sizeEasy.addEventListener("change", (event) => {
+gameMiner.resultsTitle.addEventListener("click", event => {
+  gameMiner.openResults(event);
+});
+
+gameMiner.resultsCloseIcon.addEventListener("click", event => {
+  gameMiner.closeResults(event);
+});
+
+gameMiner.settingsCloseIcon.addEventListener("click", event => {
+  gameMiner.closeSettings(event);
+});
+
+window.addEventListener("unload", event => {
+  gameMiner.saveGame(event);
+});
+gameMiner.sizeEasy.addEventListener("change", event => {
   // console.log(event);
   gameMiner.setNewSizeOfField(event);
+  // gameMiner.openSettings(event);
 });
-gameMiner.sizeMedium.addEventListener("change", (event) => {
+gameMiner.sizeMedium.addEventListener("change", event => {
   // console.log(event);
   gameMiner.setNewSizeOfField(event);
+  // gameMiner.openSettings(event);
 });
-gameMiner.sizeHard.addEventListener("change", (event) => {
+gameMiner.sizeHard.addEventListener("change", event => {
   // console.log(event);
   gameMiner.setNewSizeOfField(event);
+  // gameMiner.openSettings(event);
 });
-gameMiner.numberOfMinesInput.addEventListener("change", (event) => {
+gameMiner.numberOfMinesInput.addEventListener("change", event => {
   // console.log(event);
   gameMiner.setNewNumberOfMines(event);
+  // gameMiner.openSettings(event);
 });
-gameMiner.whiteThemeInput.addEventListener("change", (event) => {
+gameMiner.whiteThemeInput.addEventListener("change", event => {
   gameMiner.setWhiteTheme(event);
+  // gameMiner.openSettings(event);
 });
-gameMiner.blackThemeInput.addEventListener("change", (event) => {
+gameMiner.blackThemeInput.addEventListener("change", event => {
   gameMiner.setBlackTheme(event);
+  // gameMiner.openSettings(event);
 });
 
-gameMiner.onSoundInput.addEventListener("change", (event) => {
+gameMiner.onSoundInput.addEventListener("change", event => {
   gameMiner.setSoundVolumeOn(event);
+  // gameMiner.openSettings(event);
 });
-gameMiner.offSoundInput.addEventListener("change", (event) => {
+gameMiner.offSoundInput.addEventListener("change", event => {
   gameMiner.setSoundVolumeOff(event);
+  // gameMiner.openSettings(event);
 });
