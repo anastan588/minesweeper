@@ -22,6 +22,8 @@ class MineSweeperGame {
     this.audioForOpenCell = new Audio("./assets/audio/opensound.mp3");
     this.audioForFlagCell = new Audio("./assets/audio/flagsound.mp3");
     this.audioForMineCell = new Audio("./assets/audio/kitten2sound.mp3");
+    this.audioForGameOver = new Audio("./assets/audio/loosesound.mp3");
+    this.audioForWin = new Audio("./assets/audio/winsound.mp3");
     // console.log(this.audioForOpenCell);
     this.mainContainer = document.createElement("div");
     this.toolsScoreContainer = document.createElement("div");
@@ -1312,6 +1314,7 @@ class MineSweeperGame {
       this.counterOfMarkedKittens !== this.mines
     ) {
       this.resultText.textContent = `Opps!!! Your woke up a kitten and he scratched you. Sorry, but the game is over. Be more cauful next time. Good luck)`;
+      this.audioForGameOver.play();
     } else if (
       this.minesField[cellCurrentRowPosition][cellCurrentColumnPosition] ===
         "m" &&
@@ -1321,6 +1324,7 @@ class MineSweeperGame {
       this.resultText.textContent = `Cogratulations!!!! You found all kittens in ${this.counterOfTime.textContent.slice(
         10
       )} and ${this.productiveClicksCount} clicks and  didn't wake up them`;
+      this.audioForWin.play();
     } else if (
       this.minesField[cellCurrentRowPosition][cellCurrentColumnPosition] !==
         "m" &&
@@ -1329,6 +1333,7 @@ class MineSweeperGame {
       this.resultText.textContent = `Cogratulations!!!! You found all kittens in ${this.counterOfTime.textContent.slice(
         10
       )} and ${this.productiveClicksCount} clicks and  didn't wake up them`;
+      this.audioForWin.play();
     }
   }
 
@@ -1633,6 +1638,8 @@ class MineSweeperGame {
     this.settingsCloseIcon.children[0].remove();
     this.settingsCloseIconImage.src = "./assets/icons/closeBlack.png";
     this.settingsCloseIcon.append(this.settingsCloseIconImage);
+    this.loadWindow.style.background = "#fafafa";
+    this.loadWindow.style.color = "#000000";
   }
 
   setBlackTheme() {
@@ -1675,17 +1682,23 @@ class MineSweeperGame {
     this.settingsCloseIcon.children[0].remove();
     this.settingsCloseIconImage.src = "./assets/icons/closeWhite.png";
     this.settingsCloseIcon.append(this.settingsCloseIconImage);
+    this.loadWindow.style.background = "#000000";
+    this.loadWindow.style.color = "#FFFFFF";
   }
 
   setSoundVolumeOn(event) {
     this.audioForMineCell.volume = 1;
     this.audioForFlagCell.volume = 1;
     this.audioForOpenCell.volume = 1;
+    this.audioForGameOver.volume =1;
+    this.audioForWin = 1;
   }
   setSoundVolumeOff(event) {
     this.audioForMineCell.volume = 0;
     this.audioForFlagCell.volume = 0;
     this.audioForOpenCell.volume = 0;
+    this.audioForGameOver.volume = 0;
+    this.audioForWin = 0;
     console.log(this.audioForOpenCell.volume);
   }
 
