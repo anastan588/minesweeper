@@ -89,7 +89,9 @@ class MineSweeperGame {
     this.resultsInputBlockInput = document.createElement("input");
     this.resultsInputBlockSubmit = document.createElement("div");
     // saveresults
+    this.resultsForSaveIfUserCloseOrReloadWindow = new Object();
     this.gameForSaveIfUserCloseOrReloadWindow = new Object();
+    this.resultsFromSave = new Object();
     this.gameFromSave = new Object();
     this.arrayForNames = new Array();
     this.arrayForClicks =  new Array();
@@ -287,12 +289,23 @@ class MineSweeperGame {
   }
 
   receiveResultsTablefromSave() {
-    if (localStorage.getItem('savedGameMineSweeper')) {
+    if (localStorage.getItem('savedResultsMineSweeper')) {
     console.log(this.arrayForClicks);
-    if (this.gameFromSave.cliks != undefined) {
-      this.arrayForNames = [...this.gameFromSave.name];
-      this.arrayForClicks = [...this.gameFromSave.clicks];
-      this.arrayForTime = [...this.gameFromSave.time];
+    console.log(this.resultsFromSave.clicks != undefined);
+    console.log(this.resultsFromSave.clicks);
+    if (this.resultsFromSave.clicks != undefined) {
+      console.log(typeof this.resultsFromSave.name);
+      console.log(typeof this.resultsFromSave.clicks);
+      console.log(typeof this.resultsFromSave.time);
+      this.arrayForNames = [...this.resultsFromSave.name];
+      this.arrayForClicks = [...this.resultsFromSave.clicks];
+      this.arrayForTime = [...this.resultsFromSave.time];    
+      console.log(this.arrayForNames);
+       console.log(this.arrayForClicks);
+      console.log(this.arrayForTime);
+      console.log(this.arrayForNames);
+       console.log(this.arrayForClicks);
+      console.log(this.arrayForTime);
       for (let i = 0; i < this.arrayForClicks.length; i++) {
         let resultsTableLine = document.createElement("div");
         resultsTableLine.classList.add("results_line");
@@ -316,10 +329,10 @@ class MineSweeperGame {
   }
 
   makeNoteInResults() {
-    if (this.resultsTable.children.length >= 11) {
+    if (this.resultsTable.children.length >= 12) {
       this.resultsTable.children[2].remove();
       this.arrayForNames.shift();
-      this.arrayForCliks.shift();
+      this.arrayForClicks.shift();
       this.arrayForTime.shift();
     }
     let resultsTableLine = document.createElement("div");
@@ -1688,27 +1701,34 @@ class MineSweeperGame {
   }
 
   saveGame(event) {
-    console.log(this.arrayForClicks.length)
+    console.log(this.arrayForClicks.length);
   if (this.arrayForClicks.length>0) {
-    let gameForSaveIfUserCloseOrReloadWindow = {
+    let resultsForSaveIfUserCloseOrReloadWindow = {
       name: this.arrayForNames,
-      cliks: this.arrayForClicks,
+      clicks: this.arrayForClicks,
       time: this.arrayForTime
+      
     };
-    let savedGame = JSON.stringify(gameForSaveIfUserCloseOrReloadWindow);
-    let value = JSON.parse(savedGame);
-    console.log(savedGame);
-    console.log(value);
-    localStorage.setItem("savedGameMineSweeper", savedGame);
+    if (this.minesField[0] != null) {
+      let gameForSaveIfUserCloseOrReloadWindow = {
+      fiedWithMines: this.minesField,
+    }
+    }
+    
+    let savedResults = JSON.stringify(resultsForSaveIfUserCloseOrReloadWindow);
+    let resultsFromSave = JSON.parse(savedResults);
+    console.log(savedResults);
+    console.log(resultsFromSave);
+    localStorage.setItem("savedResultsMineSweeper", savedResults);
   }
 
   }
 
   receivePreviousGameInSave() {
-    this.gameFromSave = JSON.parse(
-      localStorage.getItem("savedGameMineSweeper")
+    this.resultsFromSave = JSON.parse(
+      localStorage.getItem("savedResultsMineSweeper")
     );
-    console.log(this.gameFromSave);
+    console.log(this.resultsFromSave);
     this.receiveResultsTablefromSave();
   }
 }
@@ -1750,6 +1770,7 @@ gameMiner.resultsTitle.addEventListener("click", event => {
 
 gameMiner.resultsCloseIcon.addEventListener("click", event => {
   gameMiner.closeResults(event);
+  // gameMiner.saveGame(event);
 });
 
 gameMiner.settingsCloseIcon.addEventListener("click", event => {
