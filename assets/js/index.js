@@ -89,15 +89,16 @@ class MineSweeperGame {
     this.resultsInputBlockTitle = document.createElement("div");
     this.resultsInputBlockInput = document.createElement("input");
     this.resultsInputBlockSubmit = document.createElement("div");
-    // saveresults
+    // savegame
     this.resultsForSaveIfUserCloseOrReloadWindow = new Object();
     this.gameForSaveIfUserCloseOrReloadWindow = new Object();
     this.resultsFromSave = new Object();
     this.gameFromSave = new Object();
     this.arrayForNames = new Array();
-    this.arrayForClicks =  new Array();
+    this.arrayForClicks = new Array();
     this.arrayForTime = [];
     this.arrayOfClasesOfCells = [];
+    this.loadEvent = 0;
     // load window
     this.loadWindow = document.createElement("div");
     this.loadTitle = document.createElement("div");
@@ -297,43 +298,42 @@ class MineSweeperGame {
   }
 
   receiveResultsTablefromSave() {
-    if (localStorage.getItem('savedResultsMineSweeper')) {
-    console.log(this.arrayForClicks);
-    console.log(this.resultsFromSave.clicks != undefined);
-    console.log(this.resultsFromSave.clicks);
-    if (this.resultsFromSave.clicks != undefined) {
-      console.log(typeof this.resultsFromSave.name);
-      console.log(typeof this.resultsFromSave.clicks);
-      console.log(typeof this.resultsFromSave.time);
-      this.arrayForNames = [...this.resultsFromSave.name];
-      this.arrayForClicks = [...this.resultsFromSave.clicks];
-      this.arrayForTime = [...this.resultsFromSave.time];    
-      console.log(this.arrayForNames);
-       console.log(this.arrayForClicks);
-      console.log(this.arrayForTime);
-      console.log(this.arrayForNames);
-       console.log(this.arrayForClicks);
-      console.log(this.arrayForTime);
-      for (let i = 0; i < this.arrayForClicks.length; i++) {
-        let resultsTableLine = document.createElement("div");
-        resultsTableLine.classList.add("results_line");
-        this.resultsTable.append(resultsTableLine);
-        let resultsItemName = document.createElement("div");
-        resultsItemName.classList.add("results_item");
-        resultsItemName.textContent = this.arrayForNames[i];
-        resultsTableLine.append(resultsItemName);
-        let resultsItemClicks = document.createElement("div");
-        resultsItemClicks.classList.add("results_item");
-        resultsItemClicks.textContent = this.arrayForClicks[i];
-        resultsTableLine.append(resultsItemClicks);
-        let resultsItemDuration = document.createElement("div");
-        resultsItemDuration.classList.add("results_item");
-        resultsItemDuration.textContent = this.arrayForTime[i];
-        resultsTableLine.append(resultsItemDuration);
+    if (localStorage.getItem("savedResultsMineSweeper")) {
+      console.log(this.arrayForClicks);
+      console.log(this.resultsFromSave.clicks != undefined);
+      console.log(this.resultsFromSave.clicks);
+      if (this.resultsFromSave.clicks != undefined) {
+        console.log(typeof this.resultsFromSave.name);
+        console.log(typeof this.resultsFromSave.clicks);
+        console.log(typeof this.resultsFromSave.time);
+        this.arrayForNames = [...this.resultsFromSave.name];
+        this.arrayForClicks = [...this.resultsFromSave.clicks];
+        this.arrayForTime = [...this.resultsFromSave.time];
+        console.log(this.arrayForNames);
+        console.log(this.arrayForClicks);
+        console.log(this.arrayForTime);
+        console.log(this.arrayForNames);
+        console.log(this.arrayForClicks);
+        console.log(this.arrayForTime);
+        for (let i = 0; i < this.arrayForClicks.length; i++) {
+          let resultsTableLine = document.createElement("div");
+          resultsTableLine.classList.add("results_line");
+          this.resultsTable.append(resultsTableLine);
+          let resultsItemName = document.createElement("div");
+          resultsItemName.classList.add("results_item");
+          resultsItemName.textContent = this.arrayForNames[i];
+          resultsTableLine.append(resultsItemName);
+          let resultsItemClicks = document.createElement("div");
+          resultsItemClicks.classList.add("results_item");
+          resultsItemClicks.textContent = this.arrayForClicks[i];
+          resultsTableLine.append(resultsItemClicks);
+          let resultsItemDuration = document.createElement("div");
+          resultsItemDuration.classList.add("results_item");
+          resultsItemDuration.textContent = this.arrayForTime[i];
+          resultsTableLine.append(resultsItemDuration);
+        }
       }
     }
-    }
-    
   }
 
   makeNoteInResults() {
@@ -386,8 +386,9 @@ class MineSweeperGame {
 
   receiveNumberOfClicks(event) {
     if (
-      (document.body.children[0].classList.contains("window_result") ||
-      this.markForRangeEvent !== 0) || event.target === this.game
+      document.body.children[0].classList.contains("window_result") ||
+      this.markForRangeEvent !== 0 ||
+      event.target === this.game
     ) {
       console.log(event.target === this.game);
       event.stopImmediatePropagation();
@@ -409,14 +410,15 @@ class MineSweeperGame {
       this.numberOfLeftClicks.textContent = `Number of movements: ${this.productiveClicksCount}`;
     }
     this.clickscount += 1;
-    if (this.clickscount === 1) {
-      setTimeout(function() {
+    if (this.clickscount === 1 || this.loadEvent === 1) {
+      setTimeout(function () {
         gameMiner.countTime();
         // console.log('start');
       }, 0);
-      this.timerIdForStop = setInterval(function() {
+      this.timerIdForStop = setInterval(function () {
         gameMiner.countTime();
       }, 1000);
+      this.loadEvent = 0;
     }
   }
 
@@ -425,8 +427,9 @@ class MineSweeperGame {
     console.log(event.target);
     if (
       (!this.cell &&
-      !this.cell.contains.classList.contains("opened") &&
-      event.type === "click") || event.target === this.game
+        !this.cell.contains.classList.contains("opened") &&
+        event.type === "click") ||
+      event.target === this.game
     ) {
       console.log(event.target === this.game);
       return;
@@ -561,9 +564,8 @@ class MineSweeperGame {
       let currentCellColumn = parseInt(
         this.game.children[i].dataset.position.split(",")[1]
       );
-      this.game.children[i].textContent = this.minesField[currentCellRow][
-        currentCellColumn
-      ];
+      this.game.children[i].textContent =
+        this.minesField[currentCellRow][currentCellColumn];
     }
   }
 
@@ -573,7 +575,8 @@ class MineSweeperGame {
     // console.log(this.markForRangeEvent);
     if (
       document.body.children[0].classList.contains("window_result") ||
-      (this.markForRangeEvent !== 0 && this.productiveClicksCount > 0) || event.target === this.game
+      (this.markForRangeEvent !== 0 && this.productiveClicksCount > 0) ||
+      event.target === this.game
     ) {
       console.log(event.target === this.game);
       event.preventDefault();
@@ -589,7 +592,7 @@ class MineSweeperGame {
           event.type === "click") ||
         (!this.cell &&
           !this.cell.contains.classList.contains("cell") &&
-          event.type === "contextmenu") 
+          event.type === "contextmenu")
       ) {
         event.preventDefault();
         return;
@@ -646,9 +649,10 @@ class MineSweeperGame {
               ] !== 0
             ) {
               this.audioForOpenCell.play();
-              this.currentCell.textContent = this.minesField[
-                cellCurrentRowPosition
-              ][cellCurrentColumnPosition];
+              this.currentCell.textContent =
+                this.minesField[cellCurrentRowPosition][
+                  cellCurrentColumnPosition
+                ];
               this.makeDigitsColorful(
                 cellCurrentRowPosition,
                 cellCurrentColumnPosition
@@ -782,9 +786,10 @@ class MineSweeperGame {
                 cellCurrentColumnPosition - 1
               ] !== 0
             ) {
-              this.game.children[i].innerHTML = this.minesField[
-                cellCurrentRowPosition - 1
-              ][cellCurrentColumnPosition - 1];
+              this.game.children[i].innerHTML =
+                this.minesField[cellCurrentRowPosition - 1][
+                  cellCurrentColumnPosition - 1
+                ];
             }
             // console.log(currentCellOnCheck);
             this.makeDigitsColorful(
@@ -834,9 +839,10 @@ class MineSweeperGame {
                 cellCurrentColumnPosition
               ] !== 0
             ) {
-              this.game.children[i].innerHTML = this.minesField[
-                cellCurrentRowPosition - 1
-              ][cellCurrentColumnPosition];
+              this.game.children[i].innerHTML =
+                this.minesField[cellCurrentRowPosition - 1][
+                  cellCurrentColumnPosition
+                ];
             }
             this.makeDigitsColorful(
               cellCurrentRowPosition - 1,
@@ -887,9 +893,10 @@ class MineSweeperGame {
                 cellCurrentColumnPosition + 1
               ] !== 0
             ) {
-              this.game.children[i].innerHTML = this.minesField[
-                cellCurrentRowPosition - 1
-              ][cellCurrentColumnPosition + 1];
+              this.game.children[i].innerHTML =
+                this.minesField[cellCurrentRowPosition - 1][
+                  cellCurrentColumnPosition + 1
+                ];
             }
 
             this.makeDigitsColorful(
@@ -933,9 +940,10 @@ class MineSweeperGame {
                 cellCurrentColumnPosition - 1
               ] !== 0
             ) {
-              this.game.children[i].innerHTML = this.minesField[
-                cellCurrentRowPosition
-              ][cellCurrentColumnPosition - 1];
+              this.game.children[i].innerHTML =
+                this.minesField[cellCurrentRowPosition][
+                  cellCurrentColumnPosition - 1
+                ];
             }
 
             this.makeDigitsColorful(
@@ -980,9 +988,10 @@ class MineSweeperGame {
                 cellCurrentColumnPosition + 1
               ] !== 0
             ) {
-              this.game.children[i].innerHTML = this.minesField[
-                cellCurrentRowPosition
-              ][cellCurrentColumnPosition + 1];
+              this.game.children[i].innerHTML =
+                this.minesField[cellCurrentRowPosition][
+                  cellCurrentColumnPosition + 1
+                ];
             }
             this.makeDigitsColorful(
               cellCurrentRowPosition,
@@ -1027,9 +1036,10 @@ class MineSweeperGame {
                 cellCurrentColumnPosition - 1
               ] !== 0
             ) {
-              this.game.children[i].innerHTML = this.minesField[
-                cellCurrentRowPosition + 1
-              ][cellCurrentColumnPosition - 1];
+              this.game.children[i].innerHTML =
+                this.minesField[cellCurrentRowPosition + 1][
+                  cellCurrentColumnPosition - 1
+                ];
             }
             this.makeDigitsColorful(
               cellCurrentRowPosition + 1,
@@ -1072,9 +1082,10 @@ class MineSweeperGame {
                 cellCurrentColumnPosition
               ] !== 0
             ) {
-              this.game.children[i].innerHTML = this.minesField[
-                cellCurrentRowPosition + 1
-              ][cellCurrentColumnPosition];
+              this.game.children[i].innerHTML =
+                this.minesField[cellCurrentRowPosition + 1][
+                  cellCurrentColumnPosition
+                ];
             }
 
             this.makeDigitsColorful(
@@ -1121,9 +1132,10 @@ class MineSweeperGame {
                 cellCurrentColumnPosition + 1
               ] !== 0
             ) {
-              this.game.children[i].innerHTML = this.minesField[
-                cellCurrentRowPosition + 1
-              ][cellCurrentColumnPosition + 1];
+              this.game.children[i].innerHTML =
+                this.minesField[cellCurrentRowPosition + 1][
+                  cellCurrentColumnPosition + 1
+                ];
             }
 
             this.makeDigitsColorful(
@@ -1289,22 +1301,21 @@ class MineSweeperGame {
   }
 
   openWindowForLoadPreviousGame(event) {
-    if (localStorage.getItem('savedGameMineSweeper'))  {
-      this.loadWindow.classList.add('load_window');
-   this.loadTitle.classList.add('load_title');
-   this.loadTitle.textContent = 'Do you want to load previuos game?'
-   this.loadWindow.append(this.loadTitle);
-   this.loadBlockForButtons.classList.add('load_buttons_block');
-   this.loadWindow.append(this.loadBlockForButtons);
-   this.loadYesButton.classList.add('load_button');
-   this.loadYesButton.textContent = 'Yes';
-   this.loadBlockForButtons.append(this.loadYesButton);
-   this.loadNoButton.classList.add('load_button');
-   this.loadNoButton.textContent = 'No';
-   this.loadBlockForButtons.append(this.loadNoButton);
-   document.body.prepend(this.loadWindow);
+    if (localStorage.getItem("savedGameMineSweeper")) {
+      this.loadWindow.classList.add("load_window");
+      this.loadTitle.classList.add("load_title");
+      this.loadTitle.textContent = "Do you want to load previuos game?";
+      this.loadWindow.append(this.loadTitle);
+      this.loadBlockForButtons.classList.add("load_buttons_block");
+      this.loadWindow.append(this.loadBlockForButtons);
+      this.loadYesButton.classList.add("load_button");
+      this.loadYesButton.textContent = "Yes";
+      this.loadBlockForButtons.append(this.loadYesButton);
+      this.loadNoButton.classList.add("load_button");
+      this.loadNoButton.textContent = "No";
+      this.loadBlockForButtons.append(this.loadNoButton);
+      document.body.prepend(this.loadWindow);
     }
-   
   }
   makeResultMessage(cellCurrentRowPosition, cellCurrentColumnPosition) {
     clearInterval(this.timerIdForStop);
@@ -1474,9 +1485,8 @@ class MineSweeperGame {
           this.minesField[rowPositionOfCell][columnPositionOfCell] !== "m" &&
           this.minesField[rowPositionOfCell][columnPositionOfCell] !== 0
         ) {
-          this.game.children[i].textContent = this.minesField[
-            rowPositionOfCell
-          ][columnPositionOfCell];
+          this.game.children[i].textContent =
+            this.minesField[rowPositionOfCell][columnPositionOfCell];
           // console.log(this.game.children[i]);
           this.game.children[i].classList.add("opened");
           if (this.minesField[rowPositionOfCell][columnPositionOfCell] === 1) {
@@ -1690,7 +1700,7 @@ class MineSweeperGame {
     this.audioForMineCell.volume = 1;
     this.audioForFlagCell.volume = 1;
     this.audioForOpenCell.volume = 1;
-    this.audioForGameOver.volume =1;
+    this.audioForGameOver.volume = 1;
     this.audioForWin = 1;
   }
   setSoundVolumeOff(event) {
@@ -1742,57 +1752,58 @@ class MineSweeperGame {
   }
 
   saveGame(event) {
-    for (let i = 0; i<this.game.children.length; i++) {
-      if (this.game.children[i].classList.contains('opened')) {
-        this.arrayOfClasesOfCells.push('opened');
-      } else if (this.game.children[i].classList.contains('marked')) {
-        this.arrayOfClasesOfCells.push('marked');
+    for (let i = 0; i < this.game.children.length; i++) {
+      if (this.game.children[i].classList.contains("opened")) {
+        this.arrayOfClasesOfCells.push("opened");
+      } else if (this.game.children[i].classList.contains("marked")) {
+        this.arrayOfClasesOfCells.push("marked");
       } else {
-        this.arrayOfClasesOfCells.push('unopened');
+        this.arrayOfClasesOfCells.push("unopened");
       }
     }
     console.log(this.arrayForClicks.length);
     let resultsForSaveIfUserCloseOrReloadWindow = {};
-  if (this.arrayForClicks.length>0) {
-    resultsForSaveIfUserCloseOrReloadWindow = {
-      name: this.arrayForNames,
-      clicks: this.arrayForClicks,
-      time: this.arrayForTime
-      
-    };
+    if (this.arrayForClicks.length > 0) {
+      resultsForSaveIfUserCloseOrReloadWindow = {
+        name: this.arrayForNames,
+        clicks: this.arrayForClicks,
+        time: this.arrayForTime,
+      };
     }
     let gameForSaveIfUserCloseOrReloadWindow = {};
     if (this.minesField[0] != undefined) {
       gameForSaveIfUserCloseOrReloadWindow = {
-      fieldWithMines: this.minesField,
-      rows: this.rows,
-      columms: this.columms,
-      gameField: this.arrayOfClasesOfCells,
-      allClicks: this.clickscount,
-      productiveClicks: this.productiveClicksCount,
-      timer: this.counterOfTime.textContent.slice(10,15),
-      numberOfRestMines: this.numberOfMinesForCounter,
-      whiteTheme: this.whiteThemeInput.checked,
-      blackTheme: this.blackThemeInput.checked,
-      onSound: this.onSoundInput.checked,
-      offSound: this.offSoundInput.checked,
-      size10: this.sizeEasy.checked,
-      size15: this.sizeMedium.checked,
-      size25: this.sizeHard.checked,
-      numberOfMinesInput: this.numberOfMinesInput.value,
+        fieldWithMines: this.minesField,
+        rows: this.rows,
+        mines: this.mines,
+        columms: this.columms,
+        gameField: this.arrayOfClasesOfCells,
+        allClicks: this.clickscount,
+        productiveClicks: this.productiveClicksCount,
+        timer: this.counterOfTime.textContent.slice(10, 15),
+        numberOfRestMines: this.numberOfMinesForCounter,
+        whiteTheme: this.whiteThemeInput.checked,
+        blackTheme: this.blackThemeInput.checked,
+        onSound: this.onSoundInput.checked,
+        offSound: this.offSoundInput.checked,
+        size10: this.sizeEasy.checked,
+        size15: this.sizeMedium.checked,
+        size25: this.sizeHard.checked,
+        numberOfMinesInput: this.numberOfMinesInput.value,
+      };
+      let savedResults = JSON.stringify(
+        resultsForSaveIfUserCloseOrReloadWindow
+      );
+      let savedGame = JSON.stringify(gameForSaveIfUserCloseOrReloadWindow);
+      let resultsFromSave = JSON.parse(savedResults);
+      let gameFromSave = JSON.parse(savedGame);
+      console.log(savedResults);
+      console.log(resultsFromSave);
+      console.log(savedGame);
+      console.log(gameFromSave);
+      localStorage.setItem("savedResultsMineSweeper", savedResults);
+      localStorage.setItem("savedGameMineSweeper", savedGame);
     }
-    let savedResults = JSON.stringify(resultsForSaveIfUserCloseOrReloadWindow);
-    let savedGame = JSON.stringify(gameForSaveIfUserCloseOrReloadWindow);
-    let resultsFromSave = JSON.parse(savedResults);
-    let gameFromSave = JSON.parse(savedGame);
-    console.log(savedResults);
-    console.log(resultsFromSave);
-    console.log(savedGame);
-    console.log(gameFromSave);
-    localStorage.setItem("savedResultsMineSweeper", savedResults);
-    localStorage.setItem("savedGameMineSweeper", savedGame);
-  }
-
   }
 
   receivePreviousGameInSave() {
@@ -1803,10 +1814,10 @@ class MineSweeperGame {
       localStorage.getItem("savedGameMineSweeper")
     );
     console.log(this.minesField);
-    console.log(this.minesField[0]== undefined);
+    console.log(this.minesField[0] == undefined);
     console.log(this.resultsFromSave);
     console.log(this.gameFromSave);
-    this.openWindowForLoadPreviousGame()
+    this.openWindowForLoadPreviousGame();
     this.receiveResultsTablefromSave();
   }
 
@@ -1816,6 +1827,52 @@ class MineSweeperGame {
       document.body.children[0].remove();
     }
   }
+
+  loadPreviousGame(event) {
+    // lead theme
+    if (this.gameFromSave.whiteTheme === true) {
+      this.whiteThemeInput.checked = true;
+      this.setWhiteTheme();
+    }
+    if (this.gameFromSave.offSound === true) {
+      this.offSoundInput.checked = true;
+      this.setSoundVolumeOff();
+    }
+    if (this.gameFromSave.size15 === true) {
+      this.sizeMedium.checked = true;
+    } else if (this.gameFromSave.size25 === true) {
+      this.sizeHard.checked = true;
+    }
+    this.mines = this.gameFromSave.mines;
+    this.numberOfMinesInput.value = this.gameFromSave.mines;
+    this.numberOfMinesTitle.textContent = `Number of kittens: ${this.mines} kittens`;
+    this.minesField = JSON.parse(
+      JSON.stringify(this.gameFromSave.fieldWithMines)
+    );
+    this.rows = this.gameFromSave.rows;
+    this.columns = this.gameFromSave.columms;
+    this.clickscount = this.gameFromSave.allClicks;
+    this.productiveClicksCount = this.gameFromSave.productiveClicks;
+    this.numberOfLeftClicks.textContent = `Number of movements: ${this.productiveClicksCount}`;
+    this.counterOfTime.textContent = `Duration: ${this.gameFromSave.timer} seconds`;
+    this.seconds = parseInt(this.gameFromSave.timer.slice(3));
+    this.minutes = parseInt(this.gameFromSave.timer.slice(0,3));
+    this.numberOfMinesForCounter = this.gameFromSave.numberOfRestMines;
+    this.counterOfMines.textContent = `Number of hidden dreaming cats: ${this.numberOfMinesForCounter}`;
+    console.log(this.minesField);
+    console.log(this.rows);
+    console.log(this.columns);
+    console.log(this.mines);
+    console.log(this.clickscount);
+    console.log(this.productiveClicksCount);
+    console.log(this.counterOfTime.textContent);
+    console.log(this.numberOfMinesForCounter);
+    console.log(this.numberOfMinesTitle.textContent);
+    console.log(this.seconds);
+    console.log(this.minutes);
+    this.closeLoadWindow(event);
+    this.loadEvent = 1;
+  }
 }
 
 let gameMiner = new MineSweeperGame();
@@ -1823,7 +1880,7 @@ let gameMiner = new MineSweeperGame();
 gameMiner.receiveMineSweeperGame();
 gameMiner.receiveMineSweeperBoard();
 gameMiner.receivePreviousGameInSave();
-gameMiner.game.addEventListener("click", event => {
+gameMiner.game.addEventListener("click", (event) => {
   gameMiner.receiveNumberOfClicks(event);
   // console.log(gameMiner.clickscount);
   if (gameMiner.clickscount === 1) {
@@ -1831,78 +1888,82 @@ gameMiner.game.addEventListener("click", event => {
   }
   gameMiner.openCell(event);
 });
-gameMiner.game.addEventListener("contextmenu", event => {
+gameMiner.game.addEventListener("contextmenu", (event) => {
   gameMiner.openCell(event);
 });
-gameMiner.resultOKButton.addEventListener("click", event => {
+gameMiner.resultOKButton.addEventListener("click", (event) => {
   gameMiner.pressOKonCloseWindow(event);
 });
-gameMiner.buttonStartNewGame.addEventListener("click", event => {
+gameMiner.buttonStartNewGame.addEventListener("click", (event) => {
   gameMiner.setNewSizwOFGameGrid();
   gameMiner.pressOKonCloseWindow(event);
 });
-gameMiner.resultsInputBlockSubmit.addEventListener("click", event => {
+gameMiner.resultsInputBlockSubmit.addEventListener("click", (event) => {
   gameMiner.pressSubmitButtonOnNameWindow(event);
 });
 
-gameMiner.settigsTitle.addEventListener("click", event => {
+gameMiner.settigsTitle.addEventListener("click", (event) => {
   gameMiner.openSettings(event);
 });
 
-gameMiner.resultsTitle.addEventListener("click", event => {
+gameMiner.resultsTitle.addEventListener("click", (event) => {
   gameMiner.openResults(event);
 });
 
-gameMiner.resultsCloseIcon.addEventListener("click", event => {
+gameMiner.resultsCloseIcon.addEventListener("click", (event) => {
   gameMiner.closeResults(event);
   gameMiner.saveGame(event);
 });
 
-gameMiner.settingsCloseIcon.addEventListener("click", event => {
+gameMiner.settingsCloseIcon.addEventListener("click", (event) => {
   gameMiner.closeSettings(event);
 });
 
-gameMiner.loadNoButton.addEventListener("click", event => {
+gameMiner.loadNoButton.addEventListener("click", (event) => {
   gameMiner.closeLoadWindow(event);
 });
 
-window.addEventListener("unload", event => {
+gameMiner.loadYesButton.addEventListener("click", (event) => {
+  gameMiner.loadPreviousGame(event);
+});
+
+window.addEventListener("unload", (event) => {
   gameMiner.saveGame(event);
 });
-gameMiner.sizeEasy.addEventListener("change", event => {
+gameMiner.sizeEasy.addEventListener("change", (event) => {
   // console.log(event);
   gameMiner.setNewSizeOfField(event);
   // gameMiner.openSettings(event);
 });
-gameMiner.sizeMedium.addEventListener("change", event => {
+gameMiner.sizeMedium.addEventListener("change", (event) => {
   // console.log(event);
   gameMiner.setNewSizeOfField(event);
   // gameMiner.openSettings(event);
 });
-gameMiner.sizeHard.addEventListener("change", event => {
+gameMiner.sizeHard.addEventListener("change", (event) => {
   // console.log(event);
   gameMiner.setNewSizeOfField(event);
   // gameMiner.openSettings(event);
 });
-gameMiner.numberOfMinesInput.addEventListener("change", event => {
+gameMiner.numberOfMinesInput.addEventListener("change", (event) => {
   // console.log(event);
   gameMiner.setNewNumberOfMines(event);
   // gameMiner.openSettings(event);
 });
-gameMiner.whiteThemeInput.addEventListener("change", event => {
+gameMiner.whiteThemeInput.addEventListener("change", (event) => {
   gameMiner.setWhiteTheme(event);
   // gameMiner.openSettings(event);
 });
-gameMiner.blackThemeInput.addEventListener("change", event => {
+gameMiner.blackThemeInput.addEventListener("change", (event) => {
   gameMiner.setBlackTheme(event);
   // gameMiner.openSettings(event);
 });
 
-gameMiner.onSoundInput.addEventListener("change", event => {
+gameMiner.onSoundInput.addEventListener("change", (event) => {
   gameMiner.setSoundVolumeOn(event);
   // gameMiner.openSettings(event);
 });
-gameMiner.offSoundInput.addEventListener("change", event => {
+gameMiner.offSoundInput.addEventListener("change", (event) => {
   gameMiner.setSoundVolumeOff(event);
   // gameMiner.openSettings(event);
 });
