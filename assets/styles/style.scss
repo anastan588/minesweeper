@@ -444,6 +444,14 @@ input_range_open::-webkit-slider-thumb {
   background: $font-color;
   transform: rotate(45deg);
   background: red;
+  @media screen and (max-width: 1150px) {
+    width: 15px;
+    top: 4px;
+  left: -2px;
+  }
+  @media screen and (max-width: 450px) {
+    width: 13px;
+  }
 }
 
 .cross2 {
@@ -455,6 +463,14 @@ input_range_open::-webkit-slider-thumb {
   background: $font-color;
   transform: rotate(-45deg);
   background: red;
+  @media screen and (max-width: 1150px) {
+    width: 15px;
+    top: 4px;
+  left: -2px;
+  }
+  @media screen and (max-width: 450px) {
+    width: 13px;
+  }
 }
 .mine {
   height: 100%;

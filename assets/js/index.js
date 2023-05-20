@@ -384,9 +384,10 @@ class MineSweeperGame {
 
   receiveNumberOfClicks(event) {
     if (
-      document.body.children[0].classList.contains("window_result") ||
-      this.markForRangeEvent !== 0
+      (document.body.children[0].classList.contains("window_result") ||
+      this.markForRangeEvent !== 0) || event.target === this.game
     ) {
+      console.log(event.target === this.game);
       event.stopImmediatePropagation();
       return;
     }
@@ -419,12 +420,13 @@ class MineSweeperGame {
 
   receiveMinesField(event) {
     // console.log(event);
-    // console.log(event.target);
+    console.log(event.target);
     if (
-      !this.cell &&
+      (!this.cell &&
       !this.cell.contains.classList.contains("opened") &&
-      event.type === "click"
+      event.type === "click") || event.target === this.game
     ) {
+      console.log(event.target === this.game);
       return;
     } else {
       this.cellWithOutBomb = event.target;
@@ -565,12 +567,13 @@ class MineSweeperGame {
 
   openCell(event) {
     // console.log(event);
-    // console.log(event.target);
+    console.log(event.target);
     // console.log(this.markForRangeEvent);
     if (
       document.body.children[0].classList.contains("window_result") ||
-      (this.markForRangeEvent !== 0 && this.productiveClicksCount > 0)
+      (this.markForRangeEvent !== 0 && this.productiveClicksCount > 0) || event.target === this.game
     ) {
+      console.log(event.target === this.game);
       event.preventDefault();
       event.stopImmediatePropagation();
       return;
@@ -584,7 +587,7 @@ class MineSweeperGame {
           event.type === "click") ||
         (!this.cell &&
           !this.cell.contains.classList.contains("cell") &&
-          event.type === "contextmenu")
+          event.type === "contextmenu") 
       ) {
         event.preventDefault();
         return;
