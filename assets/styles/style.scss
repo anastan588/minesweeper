@@ -534,6 +534,10 @@ input_range_open::-webkit-slider-thumb {
   cursor: pointer;
   font-size: 90%;
   line-height: 100%;
+  transition: all 0.5s ease;
+  &:hover {
+    transform: scale(1.1);
+  }
 }
 
 .results_block {
@@ -644,4 +648,48 @@ input[type="text"] {
   max-width: 90px;
   padding: 10px 15px;
   border: 1px solid $color_border_cells;
+  transition: all 0.5s ease;
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.load_window {
+  position: fixed;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  font-size: 110%;
+  border: 4px outset;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  background-color: $cell_color;
+  color: $font-color_white;
+}
+
+.load_title {
+ text-align: center;
+}
+
+.load_buttons_block {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+}
+
+.load_button {
+  cursor: pointer;
+  max-width: 90px;
+  padding: 10px 15px;
+  border: 1px solid $color_border_cells;
+  transition: all 0.5s ease;
+  &:hover {
+    transform: scale(1.1);
+  }
 }

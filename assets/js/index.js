@@ -27,7 +27,6 @@ class MineSweeperGame {
     this.toolsScoreContainer = document.createElement("div");
     this.durationAndGameContainer = document.createElement("div");
     this.title = document.createElement("div");
-
     this.score = document.createElement("div");
     this.durationOnGame = document.createElement("div");
     this.game = document.createElement("div");
@@ -96,6 +95,13 @@ class MineSweeperGame {
     this.arrayForNames = new Array();
     this.arrayForClicks =  new Array();
     this.arrayForTime = [];
+    this.arrayOfClasesOfCells = [];
+    // load window
+    this.loadWindow = document.createElement("div");
+    this.loadTitle = document.createElement("div");
+    this.loadBlockForButtons = document.createElement("div");
+    this.loadYesButton = document.createElement("div");
+    this.loadNoButton = document.createElement("div");
   }
 
   receiveMineSweeperGame() {
@@ -1276,6 +1282,25 @@ class MineSweeperGame {
     this.resultsInputBlock.append(this.resultsInputBlockSubmit);
     document.body.prepend(this.resultsInputBlock);
   }
+
+  openWindowForLoadPreviousGame(event) {
+    if (localStorage.getItem('savedGameMineSweeper'))  {
+      this.loadWindow.classList.add('load_window');
+   this.loadTitle.classList.add('load_title');
+   this.loadTitle.textContent = 'Do you want to load previuos game?'
+   this.loadWindow.append(this.loadTitle);
+   this.loadBlockForButtons.classList.add('load_buttons_block');
+   this.loadWindow.append(this.loadBlockForButtons);
+   this.loadYesButton.classList.add('load_button');
+   this.loadYesButton.textContent = 'Yes';
+   this.loadBlockForButtons.append(this.loadYesButton);
+   this.loadNoButton.classList.add('load_button');
+   this.loadNoButton.textContent = 'No';
+   this.loadBlockForButtons.append(this.loadNoButton);
+   document.body.prepend(this.loadWindow);
+    }
+   
+  }
   makeResultMessage(cellCurrentRowPosition, cellCurrentColumnPosition) {
     clearInterval(this.timerIdForStop);
     if (
@@ -1701,25 +1726,55 @@ class MineSweeperGame {
   }
 
   saveGame(event) {
+    for (let i = 0; i<this.game.children.length; i++) {
+      if (this.game.children[i].classList.contains('opened')) {
+        this.arrayOfClasesOfCells.push('opened');
+      } else if (this.game.children[i].classList.contains('marked')) {
+        this.arrayOfClasesOfCells.push('marked');
+      } else {
+        this.arrayOfClasesOfCells.push('unopened');
+      }
+    }
     console.log(this.arrayForClicks.length);
+    let resultsForSaveIfUserCloseOrReloadWindow = {};
   if (this.arrayForClicks.length>0) {
-    let resultsForSaveIfUserCloseOrReloadWindow = {
+    resultsForSaveIfUserCloseOrReloadWindow = {
       name: this.arrayForNames,
       clicks: this.arrayForClicks,
       time: this.arrayForTime
       
     };
-    if (this.minesField[0] != null) {
-      let gameForSaveIfUserCloseOrReloadWindow = {
-      fiedWithMines: this.minesField,
     }
+    let gameForSaveIfUserCloseOrReloadWindow = {};
+    if (this.minesField[0] != undefined) {
+      gameForSaveIfUserCloseOrReloadWindow = {
+      fieldWithMines: this.minesField,
+      rows: this.rows,
+      columms: this.columms,
+      gameField: this.arrayOfClasesOfCells,
+      allClicks: this.clickscount,
+      productiveClicks: this.productiveClicksCount,
+      timer: this.counterOfTime.textContent.slice(10,15),
+      numberOfRestMines: this.numberOfMinesForCounter,
+      whiteTheme: this.whiteThemeInput.checked,
+      blackTheme: this.blackThemeInput.checked,
+      onSound: this.onSoundInput.checked,
+      offSound: this.offSoundInput.checked,
+      size10: this.sizeEasy.checked,
+      size15: this.sizeMedium.checked,
+      size25: this.sizeHard.checked,
+      numberOfMinesInput: this.numberOfMinesInput.value,
     }
-    
     let savedResults = JSON.stringify(resultsForSaveIfUserCloseOrReloadWindow);
+    let savedGame = JSON.stringify(gameForSaveIfUserCloseOrReloadWindow);
     let resultsFromSave = JSON.parse(savedResults);
+    let gameFromSave = JSON.parse(savedGame);
     console.log(savedResults);
     console.log(resultsFromSave);
+    console.log(savedGame);
+    console.log(gameFromSave);
     localStorage.setItem("savedResultsMineSweeper", savedResults);
+    localStorage.setItem("savedGameMineSweeper", savedGame);
   }
 
   }
@@ -1728,8 +1783,22 @@ class MineSweeperGame {
     this.resultsFromSave = JSON.parse(
       localStorage.getItem("savedResultsMineSweeper")
     );
+    this.gameFromSave = JSON.parse(
+      localStorage.getItem("savedGameMineSweeper")
+    );
+    console.log(this.minesField);
+    console.log(this.minesField[0]== undefined);
     console.log(this.resultsFromSave);
+    console.log(this.gameFromSave);
+    this.openWindowForLoadPreviousGame()
     this.receiveResultsTablefromSave();
+  }
+
+  closeLoadWindow(event) {
+    event.stopPropagation();
+    if (document.body.children[0].classList.contains("load_window")) {
+      document.body.children[0].remove();
+    }
   }
 }
 
@@ -1770,11 +1839,15 @@ gameMiner.resultsTitle.addEventListener("click", event => {
 
 gameMiner.resultsCloseIcon.addEventListener("click", event => {
   gameMiner.closeResults(event);
-  // gameMiner.saveGame(event);
+  gameMiner.saveGame(event);
 });
 
 gameMiner.settingsCloseIcon.addEventListener("click", event => {
   gameMiner.closeSettings(event);
+});
+
+gameMiner.loadNoButton.addEventListener("click", event => {
+  gameMiner.closeLoadWindow(event);
 });
 
 window.addEventListener("unload", event => {
