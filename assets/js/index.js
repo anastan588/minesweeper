@@ -1325,7 +1325,7 @@ class MineSweeperGame {
       this.counterOfMarkedKittens !== this.mines
     ) {
       this.resultText.textContent = `Opps!!! Your woke up a kitten and he scratched you. Sorry, but the game is over. Be more cauful next time. Good luck)`;
-      this.audioForGameOver.play();
+      // this.audioForGameOver.play();
     } else if (
       this.minesField[cellCurrentRowPosition][cellCurrentColumnPosition] ===
         "m" &&
