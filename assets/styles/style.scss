@@ -162,7 +162,7 @@ body {
 .container_tools {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
   @media screen and (max-width:870px) {
     gap: 10px;
   }
@@ -173,9 +173,22 @@ body {
   font-style: bold;
   // text-align: center;
   @media screen and (max-width:1000px) {
+    text-align: center;
     font-size: 150%;
   }
 }
+
+.text_block {
+  max-width: 250px;
+  font-size: 100%;
+  font-style: italic;
+  line-height: 130%;
+  @media screen and (max-width:1000px) {
+    text-align: center;
+    font-size: 90%;
+  }
+}
+
 .start_button {
   max-width: 250px;
   text-align: center;
@@ -185,6 +198,24 @@ body {
   color: $font-color_white;
   background: $cell_color;
   font-style: italic;
+  transition: all 0.5s ease;
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+.save_button {
+  max-width: 250px;
+  text-align: center;
+  border: 4px outset;
+  padding: 10px 20px;
+  cursor: pointer;
+  color: $font-color_white;
+  background: $cell_color;
+  font-style: italic;
+  transition: all 0.5s ease;
+  &:hover {
+    transform: scale(1.05);
+  }
 }
 
 .tools_block {
@@ -211,9 +242,14 @@ body {
   font-style: 700;
   background: $cell_color;
   cursor: pointer;
+  transition: all 0.5s ease;
+  &:hover {
+    transform: scale(1.05);
+  }
 }
 
 .settings_container {
+  font-family: $font_georgia;
   position: absolute;
   box-sizing: border-box;
   max-width: 250px;
@@ -395,6 +431,10 @@ input_range_open::-webkit-slider-thumb {
   font-size: 100%;
 }
 
+.counter_paws {
+  font-size: 100%;
+}
+
 .counter_times {
   font-size: 100%;
 }
@@ -519,6 +559,7 @@ input_range_open::-webkit-slider-thumb {
 }
 
 .window_result {
+  font-family: $font_georgia;
   position: fixed;
   max-width: 250px;
   display: flex;
@@ -557,6 +598,7 @@ input_range_open::-webkit-slider-thumb {
 }
 
 .results_block {
+  font-family: $font_georgia;
   display: flex;
   flex-direction: column;
   gap: 0px;
@@ -575,8 +617,13 @@ input_range_open::-webkit-slider-thumb {
   flex-direction: column;
   background: $cell_color;
   cursor: pointer;
+  transition: all 0.5s ease;
+  &:hover {
+    transform: scale(1.05);
+  }
 }
 .results_table {
+  font-family: $font_georgia;
   position: absolute;
   z-index: 3;
   max-width: 250px;
@@ -632,6 +679,7 @@ input_range_open::-webkit-slider-thumb {
 }
 
 .window_name {
+  font-family: $font_georgia;
   position: fixed;
   max-width: 250px;
   display: flex;
@@ -671,6 +719,7 @@ input[type="text"] {
 }
 
 .load_window {
+  font-family: $font_georgia;
   position: fixed;
   max-width: 300px;
   display: flex;
