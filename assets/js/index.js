@@ -2103,9 +2103,9 @@ gameMiner.saveButton.addEventListener("click", event => {
   gameMiner.saveGame(event);
 });
 
-// window.addEventListener("unload", event => {
-//   gameMiner.saveGame(event);
-// });
+window.addEventListener("unload", event => {
+  gameMiner.saveGame(event);
+});
 
 gameMiner.sizeEasy.addEventListener("change", event => {
   // console.log(event);
